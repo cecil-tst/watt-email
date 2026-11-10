@@ -1,10 +1,10 @@
 # STATUS · WATT – Email
 
-- **Fase:** 1 — solo lectura. Nada escrito en el buzón.
+- **Fase:** 1 — solo lectura. Nada escrito en el buzón ni en `rules/categories.yaml`.
 - **Última actualización:** 2026-11-10
-- **Hecho:** estructura del repo; inventario de 90 días (355 hilos) en `reports/inventario.md`, generado por `scripts/inventario.py`.
-- **Por validar:** categorías tentativas (83 % de hilos con propuesta; 41 remitentes dudosos o mixtos); si «administración pública» (AEAT/CSUC/Generalitat) merece categoría propia; reglas por asunto para remitentes mixtos (OpenAI, DreamHost, Holded, WordPress).
-- **Aviso de seguridad:** el hilo `1a0f6dbb76348834` (hosting web UB, 1-oct) trae una contraseña en claro. Rotarla.
-- **Próximo paso:** Prompt 2 (revisión de dudosos). Son pocos: se hace en una sesión, sin hilos hijos. Pendiente tu OK si quieres un barrido de 12 meses de metadatos para detectar lo anual.
-- **Nota técnica:** `data/` se ha borrado (regla 6). Regenerar el informe exige repetir la extracción por el conector (~8 páginas de `search_threads`); ver cabecera del script.
-- **Datos que cambian lo planificado:** `rules/categories.yaml` sigue sin reglas; el buzón ya usa etiquetas propias (TST/HOLA, TFT, TFT/Hola, Facturas, __POR PAGAR…): respetarlas en la fase 2.
+- **Hecho:** inventario 90 d (`reports/inventario.md`); barrido de recurrencias 13 m por remitentes (`reports/recurrencias-13m.md`, ~30 consultas con solo IDs); 35 casos en `proposals/2026-11-10-validacion.json` + ficha interactiva `reports/validacion.html` (publicada como artefacto).
+- **Por validar (Cecil):** pega aquí las decisiones del artefacto («c01=A; c02=B; c07=otra:'…'»). Incluye la categoría nueva `administracion-publica` (AEAT, CSUC, Generalitat), reglas por asunto de OpenAI/DreamHost/Holded/WordPress, mapeo de tus etiquetas (c32-c35) y el hilo UB (c18: Sensible vs borrar).
+- **Hallazgo:** el barrido completo de 12 m no es viable por el conector (50 hilos ≈ 18k tokens; >100 páginas). Se hizo por remitentes: PayPal, Open Arms, BBVA, Workspace y gencat/csuc solo recogen la primera página (≥50). Las recurrencias salen mensuales; no apareció ninguna anual clara (los avisos de dominios van por dominio y hay pocos hilos de 1/año).
+- **Aviso de seguridad:** el hilo `1a0f…8834` (hosting UB) trae contraseña en claro. Rotarla si se reutilizó. No se ha abierto.
+- **Próximo paso:** con tus decisiones, actualizar `rules/categories.yaml` y pasar a fase 2 (cambiar a modo «preguntar»).
+- **Nota técnica:** `data/` borrado (regla 6). `python3 scripts/inventario.py --barrido` y `python3 scripts/build_validacion.py` regeneran los informes; ver cabeceras.
