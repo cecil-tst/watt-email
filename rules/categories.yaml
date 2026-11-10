@@ -1,0 +1,34 @@
+# Taxonomía de partida (fuente de verdad; la valida Cecil en fase 1).
+# Sin reglas todavía: sender/domain/action se rellenarán tras el inventario y la validación.
+version: 0
+estado: borrador-sin-validar
+categorias:
+  - id: spam
+    nombre: Spam
+  - id: newsletters
+    nombre: Newsletters
+  - id: info-servicio
+    nombre: Info de mantenimiento/servicio
+  - id: conversaciones
+    nombre: Conversaciones personales/profesionales
+  - id: ofertas-comerciales
+    nombre: Ofertas comerciales de servicios
+  - id: alertas
+    nombre: Alertas (seguridad, banco, plataformas)
+  - id: recordatorios-suscripcion
+    nombre: Recordatorios de suscripción/renovación
+  - id: pagos-cobros
+    nombre: Pagos y cobros
+  - id: facturas-proveedores
+    nombre: Facturas de proveedores
+  - id: facturas-saas
+    nombre: Facturas de software/SaaS
+  - id: bancos
+    nombre: Bancos
+  - id: impuestos
+    nombre: Impuestos/AEAT/gestoría
+  - id: cuentas-usuario
+    nombre: Gestión de cuentas de usuario
+  - id: otros
+    nombre: Otros
+reglas: []
