@@ -1,34 +1,114 @@
-# Taxonomía de partida (fuente de verdad; la valida Cecil en fase 1).
-# Sin reglas todavía: sender/domain/action se rellenarán tras el inventario y la validación.
-version: 0
-estado: borrador-sin-validar
+# Taxonomia y reglas (fuente de verdad). Version 1: decisiones de Cecil del 2026-11-12 sobre la ficha de validacion
+# (proposals/2026-11-10-validacion.json). FASE 1: ninguna regla se ejecuta todavia; son la base de la fase 2.
+# Vocabulario: fase2 = etiquetar | archivar | mantener en bandeja | pseudo-snooze | Sensible; fase4 = acciones sobre adjuntos/pagos.
+version: 1
+estado: decisiones-cecil-2026-11-12
 categorias:
   - id: spam
-    nombre: Spam
+    nombre: "Spam"
   - id: newsletters
-    nombre: Newsletters
+    nombre: "Newsletters"
   - id: info-servicio
-    nombre: Info de mantenimiento/servicio
+    nombre: "Info de mantenimiento/servicio"
   - id: conversaciones
-    nombre: Conversaciones personales/profesionales
+    nombre: "Conversaciones personales/profesionales"
   - id: ofertas-comerciales
-    nombre: Ofertas comerciales de servicios
+    nombre: "Ofertas comerciales de servicios"
   - id: alertas
-    nombre: Alertas (seguridad, banco, plataformas)
+    nombre: "Alertas (seguridad, banco, plataformas)"
   - id: recordatorios-suscripcion
-    nombre: Recordatorios de suscripción/renovación
+    nombre: "Recordatorios de suscripción/renovación"
   - id: pagos-cobros
-    nombre: Pagos y cobros
+    nombre: "Pagos y cobros"
   - id: facturas-proveedores
-    nombre: Facturas de proveedores
+    nombre: "Facturas de proveedores"
   - id: facturas-saas
-    nombre: Facturas de software/SaaS
+    nombre: "Facturas de software/SaaS"
   - id: bancos
-    nombre: Bancos
+    nombre: "Bancos"
   - id: impuestos
-    nombre: Impuestos/AEAT/gestoría
+    nombre: "Impuestos/AEAT/gestoría"
   - id: cuentas-usuario
-    nombre: Gestión de cuentas de usuario
+    nombre: "Gestión de cuentas de usuario"
+  - id: administracion-publica
+    nombre: "Administración pública (AEAT, CSUC, Generalitat…)"
   - id: otros
-    nombre: Otros
-reglas: []
+    nombre: "Otros"
+etiquetas_usuario:  # decisiones c32-c35
+  respetar: [TST/HOLA, TFT/Hola, TFT, TST]   # dimension entidad/alias; WATT anade etiqueta WATT/<categoria>, nunca en su lugar (c32=A)
+  facturas: {Facturas: 'mapear a facturas-proveedores o facturas-saas segun remitente', '__POR PAGAR': 'estado de flujo, no tocar', '__POR CONCILIAR': 'estado de flujo, no tocar'}   # c33=B
+  filtros_ruido: {'[NO REVISION]': newsletters/info-servicio, '_NO_REVISION_': newsletters/info-servicio, TST/SPAMDIGEST: newsletters, TFT/SPAMDIGEST: newsletters, Siteground: facturas-saas/info-servicio, '[Wordfence Alert]': alertas/info-servicio}   # c34=A
+  gestoria: {GESTOR: impuestos, GESTOR/Impuestos: impuestos, GESTOR/Nominas: impuestos}   # c35=A
+  fuera_de_alcance: ['CLIENTE/*', 'DEV/*', Vice, ICM, 'El Palomar', Trello, Boomerang*, JOAN]   # c35=A
+parametros:
+  holded_inbox: $HOLDED_INBOX_EMAIL   # direccion de ingesta de Holded: NO guardar en el repo; variable del entorno cloud
+reglas:
+  - {caso: c01, match: "from:correo.aeat.es", categoria: administracion-publica, fase2: "etiquetar; mantener en bandeja", fase4: "PDF -> Drive/Impuestos"}
+  - {caso: c02, match: "from:cve-advocats.com", categoria: impuestos, fase2: "etiquetar (GESTOR); mantener en bandeja", fase4: "adjuntos PDF -> Drive/Gestoria"}
+  - {caso: c03, match: "from:plataforma.contractacio@gencat.cat", categoria: info-servicio, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c04, match: "from:Consorci de Serveis Universitaris de Catalunya", categoria: info-servicio, fase2: "etiquetar + archivar", fase4: "-  # RIESGO: asuntos 'IMPORTANT: Avis de notificacio' pueden traer plazo; revisar tras 1 mes"}
+  - {caso: c05, match: "avisos puntuales: Junta AFA, Mosyle, Sanity, Registradores", categoria: recordatorios-suscripcion, fase2: "etiquetar + pseudo-snooze hasta fecha de caducidad", fase4: "manual (Cecil)"}
+  - {caso: c09, match: "from:Holded (equipo, marketing); soporte -> info-servicio", categoria: newsletters, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c11, match: "from:no-reply@the-storytellers.es subject:CONTACTO WEB", categoria: ofertas-comerciales, fase2: "etiquetar; mantener 1 mes en bandeja y revisar leads", fase4: "-"}
+  - {caso: c13, match: "from:openarms.es + recibos PayPal", categoria: pagos-cobros, fase2: "recibos: etiquetar + archivar; boletin: newsletters", fase4: "recibo -> Drive/Donaciones"}
+  - {caso: c14, match: "from:Justicia Alimentaria (via grupo)", categoria: newsletters, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c16, match: "captacion en frio (remitentes sueltos, alias cecil.servan@)", categoria: ofertas-comerciales, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c17, match: "contactos sueltos: crg.eu, canal.es", categoria: conversaciones, fase2: "etiquetar; mantener en bandeja", fase4: "-"}
+  - {caso: c18, match: "hilo 1a0f…8834 (credenciales UB)", categoria: otros, fase2: "archivar con etiqueta Sensible (crear etiqueta)", fase4: "-"}
+  - {caso: c19, match: "newsletters alta frecuencia: IA Hub, Atlassian marketing, John Turner/WPVibe, SiteGround Web Hosting, Emexs, OpenAI Ads, Claude Team", categoria: newsletters, fase2: "etiquetar; dejar en bandeja; proponer baja (confirmacion individual)", fase4: "baja manual (Cecil)"}
+  - {caso: c20, match: "from:noreply@po.atlassian.net", categoria: info-servicio, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c21, match: "codigos 2FA/verificacion: GitHub, Vercel, Holded, WPVibe, ChatGPT, Link", categoria: cuentas-usuario, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c22, match: "from:noreply@github.com, system@vercel.com", categoria: alertas, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c23, match: "informes DMARC (admin@thefoodtellers.com)", categoria: info-servicio, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c24, match: "from:workspace-noreply@google.com, cloudplatform-noreply@google.com, sc-noreply@google.com", categoria: info-servicio, fase2: "etiquetar + archivar", fase4: "-"}
+  - {caso: c25, match: "from:no-reply@cdmon.com", categoria: recordatorios-suscripcion, fase2: "etiquetar + pseudo-snooze hasta 48 h antes de la caducidad; ultimo aviso en bandeja (valorar Calendar con aviso 48 h: ver pendientes)", fase4: "pago manual (Cecil)"}
+  - {caso: c26, match: "from:'SiteGround' via hola@ subject:renovacion", categoria: facturas-saas, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar adjunto/recibo/factura al buzon Holded ($HOLDED_INBOX_EMAIL)  # BLOQUEADO por regla 3"}
+  - {caso: c27, match: "recibos SaaS: Google Payments, Dropbox (txn), Metricool, Canva, SumUp", categoria: facturas-saas, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar adjunto/recibo/factura al buzon Holded ($HOLDED_INBOX_EMAIL)  # BLOQUEADO por regla 3"}
+  - {caso: c28, match: "from:stripe.com (Anthropic)", categoria: facturas-saas, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar adjunto/recibo/factura al buzon Holded ($HOLDED_INBOX_EMAIL)  # BLOQUEADO por regla 3"}
+  - {caso: c29, match: "from:rafa (via grupo), growth-lab.es, rmdisseny.es", categoria: facturas-proveedores, fase2: "etiquetar (Facturas + __POR PAGAR); mantener hasta pago", fase4: "reenviar adjunto/recibo/factura al buzon Holded ($HOLDED_INBOX_EMAIL)  # BLOQUEADO por regla 3"}
+  - {caso: c31, match: "from:nacho@the-storytellers.es, Nacho Ballesta; Trello -> info-servicio", categoria: conversaciones, fase2: "etiquetar; mantener en bandeja", fase4: "-"}
+  - caso: c06
+    match: "from:noreply@tm.openai.com"
+    por_asunto:
+      - {asunto: "credit balance has been reloaded|auto-reload", categoria: pagos-cobros, fase2: "etiquetar + archivar"}
+      - {asunto: "out of credits|Add credits|credits remaining|requested more usage", categoria: alertas, fase2: "etiquetar + archivar"}
+      - {asunto: "Business subscription renews soon", categoria: recordatorios-suscripcion, fase2: "etiquetar; mantener en bandeja hasta renovar"}
+      - {asunto: "exportacion de datos|access to your account was updated|Your ChatGPT code is", categoria: cuentas-usuario, fase2: "etiquetar + archivar"}
+  - caso: c07
+    match: "from:support@dreamhost.com"
+    por_asunto:
+      - {asunto: "Domain Name Renewal Receipt|renewal success|PayPal AutoPay Payment Receipt", categoria: facturas-saas, fase2: "etiquetar + archivar; recibo PDF -> Drive/Facturas"}
+      - {asunto: "Domain Renewal Notice", categoria: recordatorios-suscripcion, fase2: "etiquetar; mantener ultimo aviso"}
+      - {asunto: "database server|Update passwords for all users", categoria: info-servicio, fase2: "etiquetar + archivar"}
+  - caso: c08
+    match: "from:no-reply@send.holded.com"
+    por_asunto:
+      - {asunto: "Factura A-", categoria: facturas-proveedores, fase2: "etiquetar (Facturas + __POR PAGAR); mantener hasta pago; registrar en Holded"}
+      - {asunto: "Codigo de verificacion (2FA)", categoria: cuentas-usuario, fase2: "etiquetar + archivar"}
+  - caso: c10
+    match: "from:wordpress@* (Wordfence)"
+    por_asunto:
+      - {asunto: "Problems found|Acceso de administracion|recuperacion de contrasena", categoria: alertas, fase2: "etiquetar; mantener en bandeja"}
+      - {asunto: "Actividad de Wordfence|Pendientes de moderacion", categoria: info-servicio, fase2: "etiquetar + archivar"}
+      - {asunto: "Restablecer la contrasena", categoria: cuentas-usuario, fase2: "etiquetar + archivar"}
+  - caso: c12
+    match: "from:paypal via grupo"
+    por_asunto:
+      - {asunto: "Recibo de su pago", categoria: pagos-cobros, fase2: "etiquetar + archivar; recibo -> Drive/Pagos"}
+      - {asunto: "(resto)", categoria: newsletters, fase2: "etiquetar + archivar"}
+  - caso: c15
+    match: "particulares gmail/outlook/otros"
+    por_asunto:
+      - {asunto: "candidatura|internship|application|practicas", categoria: otros, fase2: "etiquetar; mantener en bandeja"}
+      - {asunto: "(resto)", categoria: conversaciones, fase2: "etiquetar; mantener en bandeja"}
+  - caso: c30
+    match: "from:bbva"
+    por_asunto:
+      - {asunto: "from:comunica.bbva.com", categoria: ofertas-comerciales, fase2: "etiquetar + archivar"}
+      - {asunto: "from:notificaciones-bbva*", categoria: bancos, fase2: "etiquetar; mantener en bandeja"}
+pendientes:
+  - c26-c29 fase 4 exige REENVIAR por correo al buzon Holded; la regla 3 de CLAUDE.md prohibe enviar emails. Requiere excepcion expresa de Cecil (solo reenvio a esa direccion) o descargar el adjunto a Drive.
+  - c25 Calendar: no hay conector de Calendar en esta sesion; mientras tanto se usa pseudo-snooze. La fecha de caducidad esta en el cuerpo (leer solo esos avisos).
+  - c04 archiva avisos de notificacion con asunto IMPORTANT: revisar a los 30 dias que no se pierda ningun plazo.
+  - c19 la baja de listas es siempre confirmacion individual (regla 4).
+  - c33 mapear Facturas por remitente: falta confirmar remitentes de facturas-proveedores vs facturas-saas en el historico.
