@@ -13,8 +13,15 @@ suscripciones y cuentas de usuario en plataformas digitales.
 - Idioma de trabajo: español. Respuestas de email: formales y concisas, firmadas como Cecil Servan.
 
 ## Fase actual
-**FASE 1 — solo lectura.** No etiquetar, archivar, mover, borrar, marcar como leído, crear filtros,
-crear borradores ni enviar nada. Cecil actualizará esta línea al cambiar de fase.
+**FASE 2 — organizar** (cambio de fase pedido por Cecil el 2026-11-12; Cecil actualiza esta línea al cambiar de fase).
+- Permitido, solo con aprobación explícita de una lista concreta (regla 2) y registro en el log: crear etiquetas
+  (`WATT/<categoría>`, `Sensible`, `Snooze/AAAA-MM-DD`), etiquetar, archivar, pseudo-snooze y devolver hilos a la bandeja.
+  Las reglas aprobadas están en `rules/categories.yaml` (v1); no se inventan reglas nuevas.
+- Sigue prohibido: borrar, vaciar papelera, marcar spam, darse de baja de listas, crear filtros, crear borradores
+  (fase 3), enviar o reenviar (excepción de la regla 3) y mover adjuntos a Drive/Dropbox/Holded (fase 4).
+- Antes de ejecutar un lote: mostrar la lista (IDs cortos + acción) y esperar «apruebo …».
+- Modo de permisos de la sesión principal: «Accept edits» (no Auto), para que cada llamada de escritura al buzón pida confirmación.
+- Pendiente de esta fase: dar a Cecil instrucciones para conectar Google Calendar (avisos de caducidad, regla c25).
 
 ## Reglas de operación
 0. **Economía de uso (plan Pro):** el trabajo pesado y repetible (recuentos, agrupaciones por remitente/dominio,
@@ -26,6 +33,10 @@ crear borradores ni enviar nada. Cecil actualizará esta línea al cambiar de fa
 2. **Sesión principal:** es la única que ejecuta acciones de escritura, y solo tras aprobación explícita de Cecil
    sobre una lista concreta (IDs de mensaje + acción). "Parece bien" sobre un resumen no es aprobación de ejecución.
 3. **Nunca enviar emails.** En fase 3 solo se crean borradores; Cecil los revisa y envía.
+   **Única excepción (autorizada por Cecil el 2026-11-12):** *reenviar* (herramienta `forward`) mensajes que traigan
+   adjunto de factura/recibo al buzón de ingesta de Holded, `parametros.holded_inbox` en `rules/categories.yaml`.
+   Solo en fase 4, solo tras aprobación de una lista concreta de IDs (regla 2), a ese único destinatario, y cada
+   reenvío se registra en el log (`action: forward`). Ningún otro destinatario ni tipo de envío.
 4. **Nada irreversible** (borrar, vaciar papelera, darse de baja de listas, pagar) sin confirmación individual.
 5. **Mínimo contenido:** para clasificar, usar remitente, dominio, asunto, fecha, etiquetas y fragmento.
    Leer el cuerpo completo solo cuando sea necesario para decidir.
@@ -79,5 +90,5 @@ Este proyecto se gestiona desde escritorio, web (claude.ai/code) y móvil, sobre
   con IDs cortos para aprobar por número (p. ej. "apruebo 1-4 y 7").
 - Existe un clon local de solo consulta que se actualiza con `git pull --ff-only`. Nunca asumir que hay
   cambios locales pendientes; GitHub (`main`) es la fuente de verdad.
-- **Nunca** guardar credenciales, tokens ni contraseñas en el repositorio. El acceso a Gmail es por el conector
+- **Nunca** guardar credenciales, tokens ni contraseñas en el repositorio (la dirección de ingesta de Holded no es una credencial y Cecil autorizó guardarla en `rules/categories.yaml`). El acceso a Gmail es por el conector
   (OAuth); cualquier otra credencial futura (Holded, Dropbox) va en las variables del entorno cloud.

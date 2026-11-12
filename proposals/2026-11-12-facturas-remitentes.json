@@ -1,0 +1,233 @@
+{
+ "version": "1",
+ "fecha": "2026-11-12",
+ "fase": 2,
+ "generado_por": "sesion principal",
+ "nota": "Muestra de la etiqueta Facturas; no es exhaustiva (364 hilos en total, la mayoría antiguos).",
+ "categorias": [
+  {
+   "id": "facturas-proveedores",
+   "nombre": "Facturas de proveedores"
+  },
+  {
+   "id": "facturas-saas",
+   "nombre": "Facturas SaaS"
+  },
+  {
+   "id": "conversaciones",
+   "nombre": "Cliente / conversación"
+  }
+ ],
+ "casos": [
+  {
+   "id": "f01",
+   "tipo": "remitente",
+   "titulo": "Ivan Berbel (fotografía)",
+   "patron": "ivanberbel.com y cuenta de gmail del mismo nombre",
+   "hilos_90d": "2 + 1 antiguo",
+   "hilos_13m": "2 + 1 antiguo",
+   "recurrencia": "irregular",
+   "ejemplo": "(PDF adjunto, sin asunto leído)",
+   "categoria": "facturas-proveedores",
+   "opciones": [
+    {
+     "k": "A",
+     "categoria": "facturas-proveedores",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": true
+    },
+    {
+     "k": "B",
+     "categoria": "facturas-saas",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": false
+    },
+    {
+     "k": "C",
+     "categoria": "conversaciones",
+     "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)",
+     "f4": "—",
+     "recomendada": false
+    }
+   ],
+   "nota": "Un hilo lleva __POR PAGAR y __POR CONCILIAR. El inventario lo marcó «¿proveedor o cliente?». No se abrió."
+  },
+  {
+   "id": "f02",
+   "tipo": "remitente",
+   "titulo": "Claudia Martí Lladó (particular)",
+   "patron": "cuenta gmail",
+   "hilos_90d": 1,
+   "hilos_13m": 1,
+   "recurrencia": "puntual",
+   "ejemplo": "(PDF de 600 KB)",
+   "categoria": "facturas-proveedores",
+   "opciones": [
+    {
+     "k": "A",
+     "categoria": "facturas-proveedores",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": true
+    },
+    {
+     "k": "B",
+     "categoria": "facturas-saas",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": false
+    },
+    {
+     "k": "C",
+     "categoria": "conversaciones",
+     "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)",
+     "f4": "—",
+     "recomendada": false
+    }
+   ],
+   "nota": "Un solo hilo en feb-2026 con la etiqueta Facturas."
+  },
+  {
+   "id": "f03",
+   "tipo": "remitente",
+   "titulo": "Javier Funez · aiavisuals.com",
+   "patron": "info@aiavisuals.com",
+   "hilos_90d": 1,
+   "hilos_13m": 1,
+   "recurrencia": "puntual",
+   "ejemplo": "(PDF adjunto)",
+   "categoria": "facturas-proveedores",
+   "opciones": [
+    {
+     "k": "A",
+     "categoria": "facturas-proveedores",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": true
+    },
+    {
+     "k": "B",
+     "categoria": "facturas-saas",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": false
+    },
+    {
+     "k": "C",
+     "categoria": "conversaciones",
+     "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)",
+     "f4": "—",
+     "recomendada": false
+    }
+   ],
+   "nota": "Un hilo en feb-2026. Por el dominio podría ser un servicio de IA (SaaS)."
+  },
+  {
+   "id": "f04",
+   "tipo": "remitente",
+   "titulo": "Xavi · xdesign.barcelona",
+   "patron": "xavi@xdesign.barcelona",
+   "hilos_90d": 1,
+   "hilos_13m": 1,
+   "recurrencia": "puntual",
+   "ejemplo": "(PDF de 770 KB)",
+   "categoria": "facturas-proveedores",
+   "opciones": [
+    {
+     "k": "A",
+     "categoria": "facturas-proveedores",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": true
+    },
+    {
+     "k": "B",
+     "categoria": "facturas-saas",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": false
+    },
+    {
+     "k": "C",
+     "categoria": "conversaciones",
+     "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)",
+     "f4": "—",
+     "recomendada": false
+    }
+   ],
+   "nota": "Estudio de diseño; un hilo en jun-2025."
+  },
+  {
+   "id": "f05",
+   "tipo": "remitente",
+   "titulo": "Joan Aguadé (vía grupo hola@)",
+   "patron": "Joan Aguadé via Hola | The Storytellers",
+   "hilos_90d": 1,
+   "hilos_13m": 1,
+   "recurrencia": "puntual",
+   "ejemplo": "(conversación de 4 mensajes)",
+   "categoria": "conversaciones",
+   "opciones": [
+    {
+     "k": "A",
+     "categoria": "facturas-proveedores",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": false
+    },
+    {
+     "k": "B",
+     "categoria": "facturas-saas",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": false
+    },
+    {
+     "k": "C",
+     "categoria": "conversaciones",
+     "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)",
+     "f4": "—",
+     "recomendada": true
+    }
+   ],
+   "nota": "Cecil contestó en el hilo (oct-2024): parece conversación, no factura recibida."
+  },
+  {
+   "id": "f06",
+   "tipo": "remitente",
+   "titulo": "Daniel G Moreno (dominio gestionado en DreamHost)",
+   "patron": "danielgmoreno.com",
+   "hilos_90d": 1,
+   "hilos_13m": 1,
+   "recurrencia": "anual (renovación de dominio)",
+   "ejemplo": "(PDF de 450 KB, jun-2025)",
+   "categoria": "conversaciones",
+   "opciones": [
+    {
+     "k": "A",
+     "categoria": "facturas-proveedores",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": false
+    },
+    {
+     "k": "B",
+     "categoria": "facturas-saas",
+     "f2": "Etiquetar (Facturas) + archivar",
+     "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)",
+     "recomendada": false
+    },
+    {
+     "k": "C",
+     "categoria": "conversaciones",
+     "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)",
+     "f4": "—",
+     "recomendada": true
+    }
+   ],
+   "nota": "Los avisos de DreamHost de su dominio llegan a Cecil. Posible factura emitida a cliente."
+  }
+ ]
+}
