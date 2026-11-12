@@ -113,6 +113,11 @@ reglas:
   - {caso: f05, match: "Joan Aguade via grupo hola@", categoria: facturas-proveedores, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar a holded_inbox solo si recibido despues del 2026-11-01"}
   - {caso: f04, match: "xdesign.barcelona (decidido por Cecil 2026-11-12: proveedor)", categoria: facturas-proveedores, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar a holded_inbox solo si recibido despues del 2026-11-01"}
   - {caso: f06, match: "danielgmoreno.com", categoria: facturas-proveedores, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar a holded_inbox solo si recibido despues del 2026-11-01"}
+decisiones_lote2:  # Cecil 2026-11-12 («apruebo 1-41»)
+  - CSUC (enotum.cat) y gencat plataforma.contractacio (expediente E2343): sin nada pendiente; archivar todo lo existente (incluidos los sin leer). Regla c03/c04 sigue vigente para lo futuro.
+  - Atlassian marketing (noreply@po.atlassian.net): tratado por c20 (info-servicio + archivar).
+  - Facturas de Holded (no-reply@mail.holded.com, eu.holded.com: WELOFT/Ignasi Rodriguez, AETERNUM Kit Digital): facturas-proveedores + etiqueta Facturas + archivar; las existentes estan gestionadas y tramitadas (no se toca __POR PAGAR). Aplica a lo anterior a 2026-11-12; lo futuro: preguntar si cambia el criterio de archivo.
+  - Invitacion Holded a ai@: cuentas-usuario + archivar. Conversaciones internas (Nacho): conversaciones.
 pendientes:
   - c25 Calendar: conector disponible (2026-11-12). Cecil acepta que Claude PROPONGA eventos con aviso 48 h antes; no se crean sin aprobacion de una lista concreta. Calendarios validos: cecil@the-storytellers.es y WATT PAGOS. La fecha de caducidad esta en el cuerpo (leer solo esos avisos).
   - c04 archiva avisos de notificacion con asunto IMPORTANT: revisar a los 30 dias que no se pierda ningun plazo (aprobado por Cecil).
