@@ -93,7 +93,15 @@ Este proyecto se gestiona desde escritorio, web (claude.ai/code) y móvil, sobre
 - Si una sesión trabaja en rama propia, Claude integra en `main` (PR + fusión) solo lo validado por Cecil o cuando Cecil lo pida.
 - Escribir resúmenes y tablas de validación legibles en móvil: breves, máximo ~10 filas por bloque,
   con IDs cortos para aprobar por número (p. ej. "apruebo 1-4 y 7").
-- Existe un clon local de solo consulta que se actualiza con `git pull --ff-only`. Nunca asumir que hay
-  cambios locales pendientes; GitHub (`main`) es la fuente de verdad.
+- **Clon local de solo consulta** (en el Mac de Cecil; sesión local «clon local de watt-email con launchd»). Es parte
+  obligatoria del contexto: no suponer horarios ni estado, leer esta sección.
+  - Es una copia de `main`: nunca tiene cambios ni commits locales; GitHub (`main`) es la fuente de verdad.
+  - Actualización automática con launchd (macOS): `git pull --ff-only --quiet`, **cada hora en punto y solo entre las
+    08:00 y las 02:00** (hora local; supuesto: ambas incluidas) según Cecil. Entre 02:00 y 08:00 no se actualiza.
+  - Solo ve `main`: lo que esté en una rama sin integrar (p. ej. `claude/watt-fase-2`) no aparece hasta el PR.
+  - Estado visto por Cecil el 2026-11-12: en `main`, commit `e1c93a9`, ejecución nº 38 con exit 0, sin cambios locales.
+    El log conserva una línea antigua de fallo de red (09:14) que no es de la última ejecución.
+  - Ruta, nombre del job y fichero de log viven en esa sesión local, no en el repo. **Cualquier cambio del clon
+    (horario, ruta, tarea) se refleja aquí en el mismo cambio**, y quien lo haga lo anota en `STATUS.md`.
 - **Nunca** guardar credenciales, tokens ni contraseñas en el repositorio (la dirección de ingesta de Holded no es una credencial y Cecil autorizó guardarla en `rules/categories.yaml`). El acceso a Gmail es por el conector
   (OAuth); cualquier otra credencial futura (Holded, Dropbox) va en las variables del entorno cloud.
