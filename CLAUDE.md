@@ -105,7 +105,14 @@ Este proyecto se gestiona desde escritorio, web (claude.ai/code) y móvil, sobre
   - Solo ve `main`: lo que esté en una rama sin integrar (p. ej. `claude/watt-fase-2`) no aparece hasta el PR.
   - Estado visto por Cecil el 2026-11-12: en `main`, commit `e1c93a9`, ejecución nº 38 con exit 0, sin cambios locales.
     El log conserva una línea antigua de fallo de red (09:14) que no es de la última ejecución.
-  - Ruta, nombre del job y fichero de log viven en esa sesión local, no en el repo. **Cualquier cambio del clon
-    (horario, ruta, tarea) se refleja aquí en el mismo cambio**, y quien lo haga lo anota en `STATUS.md`.
+  - Datos del clon (Mac de Cecil):
+    - Ruta: `/Users/cecilservan/Documents/GitHub/watt-email`
+    - Job launchd: `com.cecil.watt-email-sync`; plist: `/Users/cecilservan/Library/LaunchAgents/com.cecil.watt-email-sync.plist`
+    - Comando: `/Library/Developer/CommandLineTools/usr/bin/git -C /Users/cecilservan/Documents/GitHub/watt-email pull --ff-only --quiet`
+    - Calendario: minuto 0 de las horas 8-23, 0, 1 y 2 (19 ejecuciones/día), más `RunAtLoad` al iniciar sesión.
+    - Log: `/Users/cecilservan/Library/Logs/watt-email-sync.log` (stdout y stderr). Con `--quiet` solo escribe cuando
+      hay fallo; sin recorte automático. Criterio: si supera 100 KB o hay 3 fallos seguidos, Cecil lo comunica y se decide.
+  - **Cualquier cambio del clon (horario, ruta, tarea) se refleja aquí en el mismo cambio**, y quien lo haga lo anota
+    en `STATUS.md`.
 - **Nunca** guardar credenciales, tokens ni contraseñas en el repositorio (la dirección de ingesta de Holded no es una credencial y Cecil autorizó guardarla en `rules/categories.yaml`). El acceso a Gmail es por el conector
   (OAuth); cualquier otra credencial futura (Holded, Dropbox) va en las variables del entorno cloud.
