@@ -28,6 +28,7 @@ suscripciones y cuentas de usuario en plataformas digitales.
 - Sigue prohibido: borrar, vaciar papelera, marcar spam, darse de baja de listas, crear filtros, crear borradores
   (fase 3), enviar o reenviar (excepción de la regla 3) y mover adjuntos a Drive/Dropbox/Holded (fase 4).
 - Antes de ejecutar un lote: mostrar la lista (IDs cortos + acción) y esperar «apruebo …».
+- **Regla de Cecil (2026-11-12):** todo hilo que se archiva debe quedar siempre como leído (quitar `INBOX` y `UNREAD` en la misma acción). Vale también para fase 4.
 - Modo de permisos de la sesión principal: «Accept edits» (no Auto), para que cada llamada de escritura al buzón pida confirmación.
 - Pendiente de esta fase: dar a Cecil instrucciones para conectar Google Calendar (avisos de caducidad, regla c25).
 

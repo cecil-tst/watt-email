@@ -40,4 +40,4 @@ También pendientes de decisión de baja (regla c19): IA Hub, Atlassian marketin
 ## Arranque de la sesión de fase 4
 1. Integrar antes en `main` el PR de la fase 2 (este fichero llega con él) y arrancar la fase 4 desde `main`, rama `claude/watt-fase-4`.
 2. Prompt: `/advisor opus` + «Sesión WATT - fase 4. Lee CLAUDE.md, STATUS.md, rules/categories.yaml y proposals/fase4-cola.md. Comprueba adjuntos de cada hilo de la cola, muéstrame la lista (ID corto + remitente + asunto + adjunto sí/no) y espera mi «apruebo …». Después reenvía solo a holded_inbox, registra cada forward y archiva los éxitos; los fallos van a WATT/revisar.»
-3. Cecil autoriza expresamente, para esa sesión, archivar los hilos reenviados con éxito.
+3. Cecil autoriza expresamente, para esa sesión, archivar los hilos reenviados con éxito. Regla permanente de Cecil: todo hilo archivado queda también como LEÍDO (quitar INBOX y UNREAD).
