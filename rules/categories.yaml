@@ -43,7 +43,7 @@ etiquetas_usuario:  # decisiones c32-c35
 parametros:
   reenvio_holded:   # decision Cecil 2026-11-12: que mensajes SI se reenvian a Holded en fase 4 (segun fecha de recepcion)
     facturas-saas: {desde: '2026-07-01'}              # recibidas desde el 1-jul-2026 (inclusive): reenviar; anteriores: no
-    facturas-proveedores: {despues_de: '2026-11-01'}  # hasta el 1-nov-2026 NO se reenvian; solo las posteriores (supuesto a confirmar)
+    facturas-proveedores: {despues_de: '2026-11-01'}  # hasta el 1-nov-2026 NO se reenvian; solo las posteriores (CONFIRMADO por Cecil 2026-11-12)
   holded_inbox: wearethetellerssl@holdedbox.com   # buzon de ingesta de Holded; Cecil autorizo guardarlo aqui y reenviar solo facturas (excepcion regla 3, fase 4)
 reglas:
   - {caso: c01, match: "from:correo.aeat.es", categoria: administracion-publica, fase2: "etiquetar; mantener en bandeja", fase4: "PDF -> Drive/Impuestos"}
@@ -111,10 +111,11 @@ reglas:
       - {asunto: "from:notificaciones-bbva*", categoria: bancos, fase2: "etiquetar; mantener en bandeja"}
   - {caso: f01-f03, match: "Ivan Berbel (ivanberbel.com y gmail del mismo nombre); aiavisuals.com; Claudia Marti Llado (gmail)", categoria: facturas-proveedores, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar a holded_inbox solo si recibido despues del 2026-11-01"}
   - {caso: f05, match: "Joan Aguade via grupo hola@", categoria: facturas-proveedores, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar a holded_inbox solo si recibido despues del 2026-11-01"}
+  - {caso: f04, match: "xdesign.barcelona (decidido por Cecil 2026-11-12: proveedor)", categoria: facturas-proveedores, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar a holded_inbox solo si recibido despues del 2026-11-01"}
   - {caso: f06, match: "danielgmoreno.com", categoria: facturas-proveedores, fase2: "etiquetar (Facturas) + archivar", fase4: "reenviar a holded_inbox solo si recibido despues del 2026-11-01"}
 pendientes:
-  - c25 Calendar: en fase 2 Claude dara instrucciones para conectar Google Calendar; hasta entonces, pseudo-snooze. La fecha de caducidad esta en el cuerpo (leer solo esos avisos).
+  - c25 Calendar: conector disponible (2026-11-12). Cecil acepta que Claude PROPONGA eventos con aviso 48 h antes; no se crean sin aprobacion de una lista concreta. Calendarios validos: cecil@the-storytellers.es y WATT PAGOS. La fecha de caducidad esta en el cuerpo (leer solo esos avisos).
   - c04 archiva avisos de notificacion con asunto IMPORTANT: revisar a los 30 dias que no se pierda ningun plazo (aprobado por Cecil).
   - c19 la baja de listas es siempre confirmacion individual (regla 4).
-  - f04 (xdesign.barcelona) sin decidir: proveedor/SaaS/cliente.
-  - Supuesto a confirmar: facturas de proveedores anteriores al 2 nov 2026 no se reenvian, las posteriores si.
+  - f04 (xdesign.barcelona): RESUELTO 2026-11-12, proveedor (regla f04).
+  - Confirmado por Cecil 2026-11-12: facturas de proveedores anteriores al 2 nov 2026 no se reenvian, las posteriores si.
