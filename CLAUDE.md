@@ -37,6 +37,7 @@ suscripciones y cuentas de usuario en plataformas digitales.
    adjunto de factura/recibo al buzón de ingesta de Holded, `parametros.holded_inbox` en `rules/categories.yaml`.
    Solo en fase 4, solo tras aprobación de una lista concreta de IDs (regla 2), a ese único destinatario, y cada
    reenvío se registra en el log (`action: forward`). Ningún otro destinatario ni tipo de envío.
+   Filtro por fecha de recepción (`parametros.reenvio_holded`): SaaS desde el 2026-07-01; proveedores solo posteriores al 2026-11-01.
 4. **Nada irreversible** (borrar, vaciar papelera, darse de baja de listas, pagar) sin confirmación individual.
 5. **Mínimo contenido:** para clasificar, usar remitente, dominio, asunto, fecha, etiquetas y fragmento.
    Leer el cuerpo completo solo cuando sea necesario para decidir.
