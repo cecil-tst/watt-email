@@ -7,24 +7,23 @@ Contenido: solo IDs, remitente y asunto (sin cuerpos).
 - Destino único: `parametros.holded_inbox` de `rules/categories.yaml` (herramienta `forward`, excepción de la regla 3, solo fase 4).
 - Filtro de fecha: facturas-saas recibidas el 2026-07-01 o después (`parametros.reenvio_holded`).
 - Éxito = tiene PDF de factura/recibo y se reenvía bien → registrar en `logs/` (`action: forward`) y **archivar** el hilo.
-- Fallo (sin factura/recibo, no se puede reenviar) → etiqueta **`WATT/revisar`** (se crea en la sesión de fase 2 al aprobar el lote 3) y dejar en bandeja.
-- Remitentes citados por Cecil: Anthropic, OpenAI, Google Payments, Dropbox. DreamHost: solo etiquetar y archivar, NO se reenvía.
+- Fallo (sin factura/recibo, no se puede reenviar) → etiqueta **`WATT/revisar`** (creada en fase 2, 2026-11-12) y dejar en bandeja.
+- Remitentes citados por Cecil: Anthropic, OpenAI, Google Payments, Dropbox; solo con PDF adjunto (sin PDF: etiquetar y archivar, ya hecho). DreamHost: NO se reenvía.
 
-| # | hilo | remitente | asunto | nota |
+| # | hilo | remitente | asunto | adjuntos (verificado 2026-11-12) |
 |---|---|---|---|---|
-| 1 | 1a1c3c558c8a1aa4 | Anthropic Ireland (Stripe) | Receipt #2034-5828-2941 (2026-11-10) | trae Invoice PDF + Receipt PDF |
-| 2 | 1a16d704c945d1f6 | Anthropic Ireland (Stripe) | Receipt #2916-4307 (2026-10-24) | por comprobar adjuntos |
-| 3 | 1a1692cce603bf7d | Anthropic Ireland (Stripe) | Receipt #2097-8143 (2026-10-23) | por comprobar adjuntos |
-| 4 | 1a163afbfd58b5fc | Anthropic Ireland (Stripe) | Receipt #2493-8756 (2026-10-22) | por comprobar adjuntos |
-| 5 | 1a17a3baf05b519e | Anthropic Ireland (Stripe) | Refund #3286-1830 (2026-10-26) | REEMBOLSO: preguntar a Cecil si va a Holded (¿abono?) |
-| 6 | 1a17a3b4a214c857 | Anthropic Ireland (Stripe) | Refund #3934-9886 (2026-10-26) | REEMBOLSO: ídem |
-| 7 | 1a15e5c470aa11b0 | Dropbox (no-reply@txn.dropbox.com) | Renovación plan Dropbox Standard, 58,00 € (2026-10-21) | SIN PDF: «este correo vale como recibo»; probable `WATT/revisar` |
-| 8 | 1a198c1d00cfea66 | Google Payments | Factura Google Workspace (2026-11-01) | dice PDF adjunto; sin verificar |
-| 9 | 1a0fa007176fdc5a | Google Payments | Factura Google Workspace (2026-10-02) | dice PDF adjunto; sin verificar |
-| 10 | 1a1c063593be2549 | OpenAI | Crédito del workspace recargado, 10,89 $ (2026-11-09) | comprobar si trae factura |
-| 11 | 1a1c06353d1a4588 | OpenAI | Auto-recarga activada (2026-11-09) | probablemente no es factura → `WATT/revisar` o descartar |
+| 1 | 1a1c3c558c8a1aa4 | Anthropic Ireland (Stripe) | Receipt #2034-5828-2941 (2026-11-10) | Invoice PDF + Receipt PDF |
+| 2 | 1a16d704c945d1f6 | Anthropic Ireland (Stripe) | Receipt #2916-4307 (2026-10-24) | Invoice PDF + Receipt PDF |
+| 3 | 1a1692cce603bf7d | Anthropic Ireland (Stripe) | Receipt #2097-8143 (2026-10-23) | Invoice PDF + Receipt PDF |
+| 4 | 1a163afbfd58b5fc | Anthropic Ireland (Stripe) | Receipt #2493-8756 (2026-10-22) | Invoice PDF + Receipt PDF |
+| 5 | 1a17a3baf05b519e | Anthropic Ireland (Stripe) | Refund #3286-1830 (2026-10-26) | Invoice PDF + Refund PDF (reembolso, Cecil: a la lista) |
+| 6 | 1a17a3b4a214c857 | Anthropic Ireland (Stripe) | Refund #3934-9886 (2026-10-26) | Invoice PDF + Refund PDF (reembolso, Cecil: a la lista) |
+| 7 | 1a198c1d00cfea66 | Google Payments | Factura Google Workspace nº 5726006294 (2026-11-01) | PDF adjunto |
+| 8 | 1a0fa007176fdc5a | Google Payments | Factura Google Workspace nº 5700738508 (2026-10-02) | PDF adjunto |
 
-Estos 11 hilos se etiquetan en fase 2 (lote 3) y **quedan en la bandeja** hasta que la fase 4 los archive.
+Estos 8 hilos están etiquetados `WATT/facturas-saas` + `Facturas` y siguen en la bandeja hasta que la fase 4 los reenvíe y archive.
+Decisión de Cecil (2026-11-12): los de Dropbox y OpenAI SIN PDF adjunto, y todos los de DreamHost, ya se etiquetaron y archivaron en fase 2 (no se reenvían). Sus facturas solo existen como enlace/panel (OpenAI RKGIXTU7-0005, Dropbox B59NY9N6CD4L): si Cecil las quiere en Holded, habrá que descargarlas a mano.
+
 
 ## Pendientes de ampliar la cola (se añadirán desde fase 2)
 - Recibos SaaS posteriores al 2026-07-01 de Anthropic/OpenAI/Google/Dropbox que no estaban en la primera página de la consulta (lote 4).
