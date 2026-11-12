@@ -12,16 +12,20 @@ suscripciones y cuentas de usuario en plataformas digitales.
 - Solo este buzón. Nunca otros buzones (Gmail personal, Hotmail) aunque estén accesibles.
 - Idioma de trabajo: español. Respuestas de email: formales y concisas, firmadas como Cecil Servan.
 
+## CAMBIO DE FASE (regla supermandatoria)
+- Cuando una fase termine, o Cecil hable de cambiar de fase, **Claude propone abrir una sesión nueva «WATT - fase N»**
+  y entrega las instrucciones y un prompt listo para pegar (con `/advisor opus`).
+- **Nunca** se empieza trabajo de una fase nueva en la misma sesión que la anterior, a no ser que Claude lo pregunte
+  y Cecil lo apruebe de forma expresa en esa sesión.
+- Integración en `main`: la hace siempre Claude (abre y fusiona el PR), solo tras aprobación o solicitud expresa de Cecil.
+  Cecil nunca tiene que integrar a mano. Cada fase se integra en su propio PR; no se mezclan fases en un PR.
+
 ## Fase actual
-**FASE 2 — organizar** (cambio de fase pedido por Cecil el 2026-11-12; Cecil actualiza esta línea al cambiar de fase).
-- Permitido, solo con aprobación explícita de una lista concreta (regla 2) y registro en el log: crear etiquetas
-  (`WATT/<categoría>`, `Sensible`, `Snooze/AAAA-MM-DD`), etiquetar, archivar, pseudo-snooze y devolver hilos a la bandeja.
-  Las reglas aprobadas están en `rules/categories.yaml` (v1); no se inventan reglas nuevas.
-- Sigue prohibido: borrar, vaciar papelera, marcar spam, darse de baja de listas, crear filtros, crear borradores
-  (fase 3), enviar o reenviar (excepción de la regla 3) y mover adjuntos a Drive/Dropbox/Holded (fase 4).
-- Antes de ejecutar un lote: mostrar la lista (IDs cortos + acción) y esperar «apruebo …».
-- Modo de permisos de la sesión principal: «Accept edits» (no Auto), para que cada llamada de escritura al buzón pida confirmación.
-- Pendiente de esta fase: dar a Cecil instrucciones para conectar Google Calendar (avisos de caducidad, regla c25).
+**FASE 1 — cerrada el 2026-11-12.** Clasificación terminada: taxonomía y reglas v1 validadas por Cecil en `rules/categories.yaml`.
+- Una sesión sobre `main` sigue en solo lectura: no etiquetar, archivar, mover, borrar, marcar como leído, crear filtros,
+  crear borradores ni enviar nada.
+- La **fase 2 (organizar)** se trabaja en la sesión «WATT - fase 2», sobre la rama `claude/watt-fase-2`. Esa rama lleva su
+  propia línea «FASE 2» y se integra en `main` con PR cuando Cecil lo apruebe. Hasta entonces, `main` dice fase 1.
 
 ## Reglas de operación
 0. **Economía de uso (plan Pro):** el trabajo pesado y repetible (recuentos, agrupaciones por remitente/dominio,
@@ -86,7 +90,7 @@ No usar el snooze nativo de Gmail.
 Este proyecto se gestiona desde escritorio, web (claude.ai/code) y móvil, sobre sesiones en la nube.
 - **El repositorio es la única fuente de estado.** No depender de rutas locales ni de memoria de una sesión concreta.
 - Al terminar cada tarea: actualizar `STATUS.md`, hacer commit con mensaje descriptivo y push.
-- Si una sesión trabaja en rama propia, la sesión principal integra en `main` solo lo validado por Cecil.
+- Si una sesión trabaja en rama propia, Claude integra en `main` (PR + fusión) solo lo validado por Cecil o cuando Cecil lo pida.
 - Escribir resúmenes y tablas de validación legibles en móvil: breves, máximo ~10 filas por bloque,
   con IDs cortos para aprobar por número (p. ej. "apruebo 1-4 y 7").
 - Existe un clon local de solo consulta que se actualiza con `git pull --ff-only`. Nunca asumir que hay
