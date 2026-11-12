@@ -25,6 +25,14 @@ Estos 8 hilos están etiquetados `WATT/facturas-saas` + `Facturas` y siguen en l
 Decisión de Cecil (2026-11-12): los de Dropbox y OpenAI SIN PDF adjunto, y todos los de DreamHost, ya se etiquetaron y archivaron en fase 2 (no se reenvían). Sus facturas solo existen como enlace/panel (OpenAI RKGIXTU7-0005, Dropbox B59NY9N6CD4L): si Cecil las quiere en Holded, habrá que descargarlas a mano.
 
 
+## Orden 2 · Bajas de listas (unsubscribe), orden de Cecil 2026-11-12
+- Siempre con confirmación individual (regla 4): mostrar remitente, frecuencia y método de baja y esperar «apruebo» por cada uno. No se da de baja nada en fase 2.
+| # | remitente | dato | método propuesto |
+|---|---|---|---|
+| B1 | BBVA promociones (bbva@comunica.bbva.com) | boletines/ofertas; 5 hilos ya archivados con `WATT/ofertas-comerciales` (ids 1a1c62f2ffd843b6 1a186df4648e869a 1a11bb9a29085d5e 1a11181aa44e99af 19d96ddede093c7c) | enlace de baja del correo o preferencias en BBVA (Cecil) |
+| B2 | Canva (start@engage.canva.com) | boletín semanal; hilos 16a3471aa1bfcd2e 1691439b518ec749 (2019, aún en bandeja sin etiquetar) | enlace de baja del correo (Cecil) |
+También pendientes de decisión de baja (regla c19): IA Hub, Atlassian marketing, WPVibe, SiteGround Web Hosting, Emexs, OpenAI Ads, Claude Team.
+
 ## Pendientes de ampliar la cola (se añadirán desde fase 2)
 - Recibos SaaS posteriores al 2026-07-01 de Anthropic/OpenAI/Google/Dropbox que no estaban en la primera página de la consulta (lote 4).
 - Facturas de proveedores recibidas después del 2026-11-01 (hasta hoy, ninguna: las de Holded/WELOFT son anteriores).

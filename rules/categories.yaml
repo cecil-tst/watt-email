@@ -118,6 +118,10 @@ decisiones_lote2:  # Cecil 2026-11-12 («apruebo 1-41»)
   - Atlassian marketing (noreply@po.atlassian.net): tratado por c20 (info-servicio + archivar).
   - Facturas de Holded (no-reply@mail.holded.com, eu.holded.com: WELOFT/Ignasi Rodriguez, AETERNUM Kit Digital): facturas-proveedores + etiqueta Facturas + archivar; las existentes estan gestionadas y tramitadas (no se toca __POR PAGAR). Aplica a lo anterior a 2026-11-12; lo futuro: preguntar si cambia el criterio de archivo.
   - Invitacion Holded a ai@: cuentas-usuario + archivar. Conversaciones internas (Nacho): conversaciones.
+decisiones_lote4:  # Cecil 2026-11-12 («apruebo 1-32»)
+  - BBVA promociones (bbva@comunica.bbva.com): ofertas-comerciales + archivar. FASE 4: darse de baja de la lista (confirmacion individual, regla 4; baja manual o por enlace de baja).
+  - Boletines de Canva (start@engage.canva.com): FASE 4: darse de baja (confirmacion individual). Sin etiquetar todavia (esperan decision de grupo).
+  - WATT/bancos y WATT/pagos-cobros: lo recibido HASTA el 2026-11-09 (incluido) se etiqueta y archiva; lo recibido DESDE el 2026-11-10 y a futuro se etiqueta pero SE MANTIENE EN BANDEJA. Sustituye a «etiquetar + archivar» de pagos-cobros en c06/c12/c13.
 pendientes:
   - c25 Calendar: conector disponible (2026-11-12). Cecil acepta que Claude PROPONGA eventos con aviso 48 h antes; no se crean sin aprobacion de una lista concreta. Calendarios validos: cecil@the-storytellers.es y WATT PAGOS. La fecha de caducidad esta en el cuerpo (leer solo esos avisos).
   - c04 archiva avisos de notificacion con asunto IMPORTANT: revisar a los 30 dias que no se pierda ningun plazo (aprobado por Cecil).
