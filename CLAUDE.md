@@ -21,11 +21,15 @@ suscripciones y cuentas de usuario en plataformas digitales.
   Cecil nunca tiene que integrar a mano. Cada fase se integra en su propio PR; no se mezclan fases en un PR.
 
 ## Fase actual
-**FASE 1 — cerrada el 2026-11-12.** Clasificación terminada: taxonomía y reglas v1 validadas por Cecil en `rules/categories.yaml`.
-- Una sesión sobre `main` sigue en solo lectura: no etiquetar, archivar, mover, borrar, marcar como leído, crear filtros,
-  crear borradores ni enviar nada.
-- La **fase 2 (organizar)** se trabaja en la sesión «WATT - fase 2», sobre la rama `claude/watt-fase-2`. Esa rama lleva su
-  propia línea «FASE 2» y se integra en `main` con PR cuando Cecil lo apruebe. Hasta entonces, `main` dice fase 1.
+**FASE 2 — organizar** (sesión «WATT - fase 2», rama `claude/watt-fase-2`; cambio pedido por Cecil el 2026-11-12). Esta línea solo vale en esta rama hasta que su PR se integre en `main`.
+- Permitido, solo con aprobación explícita de una lista concreta (regla 2) y registro en el log: crear etiquetas
+  (`WATT/<categoría>`, `Sensible`, `Snooze/AAAA-MM-DD`), etiquetar, archivar, pseudo-snooze y devolver hilos a la bandeja.
+  Las reglas aprobadas están en `rules/categories.yaml` (v1); no se inventan reglas nuevas.
+- Sigue prohibido: borrar, vaciar papelera, marcar spam, darse de baja de listas, crear filtros, crear borradores
+  (fase 3), enviar o reenviar (excepción de la regla 3) y mover adjuntos a Drive/Dropbox/Holded (fase 4).
+- Antes de ejecutar un lote: mostrar la lista (IDs cortos + acción) y esperar «apruebo …».
+- Modo de permisos de la sesión principal: «Accept edits» (no Auto), para que cada llamada de escritura al buzón pida confirmación.
+- Pendiente de esta fase: dar a Cecil instrucciones para conectar Google Calendar (avisos de caducidad, regla c25).
 
 ## Reglas de operación
 0. **Economía de uso (plan Pro):** el trabajo pesado y repetible (recuentos, agrupaciones por remitente/dominio,
