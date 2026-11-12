@@ -1,0 +1,237 @@
+<title>Remitentes de facturas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Concepto: lista de fichas de triaje, una por patrón de remitente; barra fija con progreso y copia de decisiones. */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --fg:#161b22; --muted:#5b6573; --line:#d9dde3;
+  --accent:#0b6b63; --accent-fg:#ffffff; --accent-soft:#dff1ee;
+  --rec:#8a5a00; --rec-soft:#fbefd2; --done:#1c6b3a; --done-soft:#dcf1e3; --warn:#a3321f;
+  --font-text:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-head:'Space Grotesk','Inter',system-ui,sans-serif;
+  --font-mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1319; --surface:#171d26; --fg:#e7ebf0; --muted:#98a3b3; --line:#2b3441;
+  --accent:#4cc3b5; --accent-fg:#06201d; --accent-soft:#12302d;
+  --rec:#f0c36a; --rec-soft:#3a2d10; --done:#6fd192; --done-soft:#123322; --warn:#ff8f7a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1319; --surface:#171d26; --fg:#e7ebf0; --muted:#98a3b3; --line:#2b3441;
+  --accent:#4cc3b5; --accent-fg:#06201d; --accent-soft:#12302d;
+  --rec:#f0c36a; --rec-soft:#3a2d10; --done:#6fd192; --done-soft:#123322; --warn:#ff8f7a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-text);font-size:15px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--surface)}
+.wrap{max-width:760px;margin:0 auto}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--surface);border-bottom:1px solid var(--line);
+  margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-left,0px)) 10px}
+.bar-in{max-width:760px;margin:0 auto;display:grid;gap:8px}
+h1{font:600 18px/1.2 var(--font-head);margin:0;text-wrap:balance}
+.prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.prog b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.meter>i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+select,button,textarea{font:inherit;color:inherit}
+select{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;max-width:100%}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:var(--bg);border:0;padding:8px 12px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
+button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lead{margin:16px 0;color:var(--muted);font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px;display:grid;gap:10px;min-width:0}
+.card.done{border-color:var(--done)}
+.head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.head h2{font:600 16px/1.25 var(--font-head);margin:0;min-width:0;overflow-wrap:anywhere}
+.id{font:600 12px var(--font-mono);background:var(--accent-soft);color:var(--accent);padding:3px 7px;border-radius:6px;flex:none}
+.pill{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--rec-soft);color:var(--rec);flex:none}
+.card.done .pill{background:var(--done-soft);color:var(--done)}
+.pat{font:12px/1.4 var(--font-mono);color:var(--muted);overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--fg);font-variant-numeric:tabular-nums}
+.ej{font-size:13px;border-left:3px solid var(--line);padding-left:8px;color:var(--muted);overflow-wrap:anywhere}
+.cat{font-size:12px;color:var(--muted)}
+.cat b{color:var(--fg)}
+details.reglas{font-size:13px}
+details.reglas summary{cursor:pointer;color:var(--accent)}
+.reglas ul{margin:6px 0 0;padding-left:18px;display:grid;gap:4px}
+.reglas li span{color:var(--muted)}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;display:grid;gap:3px;min-width:0}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt .k{font:600 13px var(--font-mono);color:var(--accent)}
+.opt .t{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.opt .c{font-weight:600}
+.opt .a{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.badge{font-size:11px;background:var(--rec-soft);color:var(--rec);padding:1px 7px;border-radius:99px}
+.otra textarea{width:100%;margin-top:6px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;min-height:64px;resize:vertical}
+.nota{font-size:13px;color:var(--muted)}
+.foot{display:flex;gap:8px;justify-content:flex-end}
+.btn{background:var(--accent);color:var(--accent-fg);border:0;border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line);font-weight:500}
+.empty{text-align:center;color:var(--muted);padding:32px 0}
+.export{display:grid;gap:8px;margin:20px 0}
+.export label{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.export textarea{width:100%;min-height:96px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;font:12px/1.4 var(--font-mono)}
+.msg{font-size:13px;color:var(--done);min-height:18px}
+@media (prefers-reduced-motion:reduce){.meter>i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="bar"><div class="bar-in">
+    <h1>Remitentes de facturas</h1>
+    <div class="prog"><span><b id="n-done">0</b> / <b id="n-all">0</b> decididos</span><div class="meter"><i id="meter"></i></div></div>
+    <div class="filters">
+      <select id="f-cat" aria-label="Filtrar por categoría"></select>
+      <div class="seg" role="group" aria-label="Filtrar por estado">
+        <button type="button" data-st="all" aria-pressed="true">Todos</button>
+        <button type="button" data-st="pend" aria-pressed="false">Pendientes</button>
+        <button type="button" data-st="done" aria-pressed="false">Decididos</button>
+      </div>
+    </div>
+  </div></header>
+
+  <p class="lead">Una ficha por remitente de la etiqueta Facturas: ¿proveedor, SaaS o cliente? La opción marcada con «Recomendada» es una suposición mía por el nombre y el dominio; no he leído los cuerpos. Toca una opción para decidir, o «Confirmar» para aceptar la que ves. Tus elecciones se guardan en este navegador. Aquí no hay cuerpos de email ni datos sensibles.</p>
+  <main id="list"></main>
+
+  <section class="export" aria-label="Copiar decisiones">
+    <label><input type="checkbox" id="inc-pend"> Incluir los pendientes con la opción recomendada</label>
+    <button type="button" class="btn" id="copy">Copiar decisiones</button>
+    <div class="msg" id="msg" role="status"></div>
+    <textarea id="out" readonly aria-label="Decisiones en texto compacto" placeholder="Aquí aparece el texto para pegar en la sesión."></textarea>
+    <div><button type="button" class="btn ghost" id="reset">Borrar mis selecciones</button></div>
+  </section>
+</div>
+
+<script>
+(function(){
+var DATA={"version": "1", "fecha": "2026-11-12", "fase": 2, "generado_por": "sesion principal", "nota": "Muestra de la etiqueta Facturas; no es exhaustiva (364 hilos en total, la mayoría antiguos).", "categorias": [{"id": "facturas-proveedores", "nombre": "Facturas de proveedores"}, {"id": "facturas-saas", "nombre": "Facturas SaaS"}, {"id": "conversaciones", "nombre": "Cliente / conversación"}], "casos": [{"id": "f01", "tipo": "remitente", "titulo": "Ivan Berbel (fotografía)", "patron": "ivanberbel.com y cuenta de gmail del mismo nombre", "hilos_90d": "2 + 1 antiguo", "hilos_13m": "2 + 1 antiguo", "recurrencia": "irregular", "ejemplo": "(PDF adjunto, sin asunto leído)", "categoria": "facturas-proveedores", "opciones": [{"k": "A", "categoria": "facturas-proveedores", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": true}, {"k": "B", "categoria": "facturas-saas", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": false}, {"k": "C", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)", "f4": "—", "recomendada": false}], "nota": "Un hilo lleva __POR PAGAR y __POR CONCILIAR. El inventario lo marcó «¿proveedor o cliente?». No se abrió."}, {"id": "f02", "tipo": "remitente", "titulo": "Claudia Martí Lladó (particular)", "patron": "cuenta gmail", "hilos_90d": 1, "hilos_13m": 1, "recurrencia": "puntual", "ejemplo": "(PDF de 600 KB)", "categoria": "facturas-proveedores", "opciones": [{"k": "A", "categoria": "facturas-proveedores", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": true}, {"k": "B", "categoria": "facturas-saas", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": false}, {"k": "C", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)", "f4": "—", "recomendada": false}], "nota": "Un solo hilo en feb-2026 con la etiqueta Facturas."}, {"id": "f03", "tipo": "remitente", "titulo": "Javier Funez · aiavisuals.com", "patron": "info@aiavisuals.com", "hilos_90d": 1, "hilos_13m": 1, "recurrencia": "puntual", "ejemplo": "(PDF adjunto)", "categoria": "facturas-proveedores", "opciones": [{"k": "A", "categoria": "facturas-proveedores", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": true}, {"k": "B", "categoria": "facturas-saas", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": false}, {"k": "C", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)", "f4": "—", "recomendada": false}], "nota": "Un hilo en feb-2026. Por el dominio podría ser un servicio de IA (SaaS)."}, {"id": "f04", "tipo": "remitente", "titulo": "Xavi · xdesign.barcelona", "patron": "xavi@xdesign.barcelona", "hilos_90d": 1, "hilos_13m": 1, "recurrencia": "puntual", "ejemplo": "(PDF de 770 KB)", "categoria": "facturas-proveedores", "opciones": [{"k": "A", "categoria": "facturas-proveedores", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": true}, {"k": "B", "categoria": "facturas-saas", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": false}, {"k": "C", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)", "f4": "—", "recomendada": false}], "nota": "Estudio de diseño; un hilo en jun-2025."}, {"id": "f05", "tipo": "remitente", "titulo": "Joan Aguadé (vía grupo hola@)", "patron": "Joan Aguadé via Hola | The Storytellers", "hilos_90d": 1, "hilos_13m": 1, "recurrencia": "puntual", "ejemplo": "(conversación de 4 mensajes)", "categoria": "conversaciones", "opciones": [{"k": "A", "categoria": "facturas-proveedores", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": false}, {"k": "B", "categoria": "facturas-saas", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": false}, {"k": "C", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)", "f4": "—", "recomendada": true}], "nota": "Cecil contestó en el hilo (oct-2024): parece conversación, no factura recibida."}, {"id": "f06", "tipo": "remitente", "titulo": "Daniel G Moreno (dominio gestionado en DreamHost)", "patron": "danielgmoreno.com", "hilos_90d": 1, "hilos_13m": 1, "recurrencia": "anual (renovación de dominio)", "ejemplo": "(PDF de 450 KB, jun-2025)", "categoria": "conversaciones", "opciones": [{"k": "A", "categoria": "facturas-proveedores", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": false}, {"k": "B", "categoria": "facturas-saas", "f2": "Etiquetar (Facturas) + archivar", "f4": "Reenviar adjunto de factura a Holded (con lista aprobada)", "recomendada": false}, {"k": "C", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja (cliente / factura emitida: no se reenvía a Holded)", "f4": "—", "recomendada": true}], "nota": "Los avisos de DreamHost de su dominio llegan a Cecil. Posible factura emitida a cliente."}]};
+var KEY='watt-facturas-v'+DATA.version+'-'+DATA.fecha;
+var state={sel:{},otra:{},done:{}};
+var flt={cat:'all',st:'all'};
+var resetArmed=false;
+
+function load(){try{var r=localStorage.getItem(KEY);if(r){var s=JSON.parse(r);if(s&&s.sel){state=s;}}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function rec(c){for(var i=0;i<c.opciones.length;i++){if(c.opciones[i].recomendada)return c.opciones[i].k;}return c.opciones[0].k;}
+function cur(c){return state.sel[c.id]||rec(c);}
+function el(t,cls,txt){var e=document.createElement(t);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+function catName(id){for(var i=0;i<DATA.categorias.length;i++){if(DATA.categorias[i].id===id)return DATA.categorias[i].nombre;}return id;}
+
+function fillCats(){
+  var s=document.getElementById('f-cat');
+  var o=el('option',null,'Todas las categorías');o.value='all';s.appendChild(o);
+  var used={};DATA.casos.forEach(function(c){used[c.categoria]=1;});
+  DATA.categorias.forEach(function(c){if(used[c.id]){var x=el('option',null,c.nombre);x.value=c.id;s.appendChild(x);}});
+  s.addEventListener('change',function(){flt.cat=s.value;render();});
+}
+
+function card(c){
+  var d=!!state.done[c.id], sel=cur(c);
+  var a=el('article','card'+(d?' done':''));a.id='caso-'+c.id;
+  var h=el('div','head');
+  var l=el('div');l.style.cssText='display:grid;gap:6px;min-width:0';
+  var row=el('div');row.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap';
+  row.appendChild(el('span','id',c.id));row.appendChild(el('span','cat','Propuesta: ')) ;
+  row.lastChild.appendChild(el('b',null,catName(c.categoria)));
+  l.appendChild(row);l.appendChild(el('h2',null,c.titulo));
+  h.appendChild(l);h.appendChild(el('span','pill',d?'Decidido':'Pendiente'));a.appendChild(h);
+  a.appendChild(el('div','pat',c.patron));
+  var m=el('div','meta');
+  [['Hilos 90 d',c.hilos_90d],['Hilos 13 m',c.hilos_13m],['Recurrencia',c.recurrencia]].forEach(function(p){
+    var s=el('span',null,p[0]+': ');s.appendChild(el('b',null,String(p[1])));m.appendChild(s);});
+  a.appendChild(m);
+  a.appendChild(el('div','ej','Asunto tipo: '+c.ejemplo));
+  if(c.reglas&&c.reglas.length){
+    var dt=el('details','reglas');dt.appendChild(el('summary',null,'Reglas por asunto ('+c.reglas.length+')'));
+    var ul=el('ul');c.reglas.forEach(function(r){var li=el('li',null,r.asunto+' → ');li.appendChild(el('b',null,r.categoria));ul.appendChild(li);});
+    dt.appendChild(ul);a.appendChild(dt);
+  }
+  var os=el('div','opts');
+  c.opciones.forEach(function(o){
+    var b=el('button','opt');b.type='button';b.setAttribute('aria-pressed',String(sel===o.k));
+    var t=el('div','t');t.appendChild(el('span','k',o.k));t.appendChild(el('span','c',o.categoria));
+    if(o.recomendada)t.appendChild(el('span','badge','Recomendada'));
+    b.appendChild(t);b.appendChild(el('div','a','Fase 2: '+o.f2));
+    if(o.f4&&o.f4!=='—')b.appendChild(el('div','a','Fase 4: '+o.f4));
+    b.addEventListener('click',function(){state.sel[c.id]=o.k;state.done[c.id]=true;save();render(c.id);});
+    os.appendChild(b);
+  });
+  var ob=el('div','opt otra');ob.setAttribute('role','group');
+  var ot=el('button','opt');ot.type='button';ot.setAttribute('aria-pressed',String(sel==='otra'));
+  var t2=el('div','t');t2.appendChild(el('span','k','otra'));t2.appendChild(el('span','c','Otra (texto libre)'));
+  ot.appendChild(t2);
+  ot.addEventListener('click',function(){state.sel[c.id]='otra';save();render(c.id,true);});
+  os.appendChild(ot);
+  if(sel==='otra'){
+    var ta=el('textarea');ta.id='otra-'+c.id;ta.placeholder='Qué categoría y qué acción en fase 2 / fase 4';
+    ta.value=state.otra[c.id]||'';
+    ta.addEventListener('input',function(){state.otra[c.id]=ta.value;save();});
+    ta.addEventListener('blur',function(){if((state.otra[c.id]||'').trim()){state.done[c.id]=true;save();updateTop();}});
+    os.appendChild(ta);
+  }
+  a.appendChild(os);
+  if(c.nota)a.appendChild(el('div','nota',c.nota));
+  var f=el('div','foot');
+  if(d){var u=el('button','btn ghost','Deshacer');u.type='button';u.addEventListener('click',function(){delete state.done[c.id];save();render(c.id);});f.appendChild(u);}
+  else{var k=el('button','btn','Confirmar '+(sel==='otra'?'otra':sel));k.type='button';
+    k.addEventListener('click',function(){state.sel[c.id]=sel;state.done[c.id]=true;save();render(c.id);});f.appendChild(k);}
+  a.appendChild(f);
+  return a;
+}
+
+function visible(c){
+  if(flt.cat!=='all'&&c.categoria!==flt.cat)return false;
+  var d=!!state.done[c.id];
+  if(flt.st==='pend'&&d)return false;
+  if(flt.st==='done'&&!d)return false;
+  return true;
+}
+function updateTop(){
+  var n=DATA.casos.length,d=0;DATA.casos.forEach(function(c){if(state.done[c.id])d++;});
+  document.getElementById('n-done').textContent=d;document.getElementById('n-all').textContent=n;
+  document.getElementById('meter').style.width=(n?100*d/n:0)+'%';
+}
+function render(focusId,focusText){
+  var y=window.scrollY;var list=document.getElementById('list');list.textContent='';
+  var shown=DATA.casos.filter(visible);
+  shown.forEach(function(c){list.appendChild(card(c));});
+  if(!shown.length)list.appendChild(el('div','empty','Ningún caso con este filtro.'));
+  updateTop();
+  if(focusText&&focusId){var t=document.getElementById('otra-'+focusId);if(t)t.focus();}
+  window.scrollTo(0,y);
+}
+
+function compact(){
+  var inc=document.getElementById('inc-pend').checked,parts=[];
+  DATA.casos.forEach(function(c){
+    var s=cur(c);
+    if(state.done[c.id]||inc){
+      if(s==='otra'){var tx=(state.otra[c.id]||'').replace(/'/g,'’').replace(/\s+/g,' ').trim();parts.push(c.id+"=otra:'"+tx+"'");}
+      else parts.push(c.id+'='+s);
+    }
+  });
+  return parts.join('; ');
+}
+function copy(){
+  var txt=compact(),out=document.getElementById('out'),msg=document.getElementById('msg');
+  out.value=txt;
+  if(!txt){msg.textContent='Todavía no hay decisiones que copiar.';return;}
+  function fallback(){out.focus();out.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+    msg.textContent=ok?'Copiado. Pégalo en la sesión.':'Selecciona el texto de abajo y cópialo a mano.';}
+  try{navigator.clipboard.writeText(txt).then(function(){msg.textContent='Copiado. Pégalo en la sesión.';},fallback);}catch(e){fallback();}
+}
+
+document.getElementById('copy').addEventListener('click',copy);
+document.getElementById('inc-pend').addEventListener('change',function(){document.getElementById('out').value=compact();});
+document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){
+  flt.st=b.getAttribute('data-st');document.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});render();});});
+var rb=document.getElementById('reset');
+rb.addEventListener('click',function(){
+  if(!resetArmed){resetArmed=true;rb.textContent='Toca otra vez para borrar todo';setTimeout(function(){resetArmed=false;rb.textContent='Borrar mis selecciones';},4000);return;}
+  state={sel:{},otra:{},done:{}};save();resetArmed=false;rb.textContent='Borrar mis selecciones';document.getElementById('out').value='';render();});
+
+load();fillCats();render();
+})();
+</script>

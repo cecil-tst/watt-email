@@ -20,7 +20,11 @@ Rehacer el informe requiere volver a ejecutar el paso 1-3 en una sesión con el 
 Las categorías propuestas son una heurística («propuesta»); la fuente de verdad sigue siendo
 rules/categories.yaml, que valida Cecil. El script solo comprueba que las categorías que usa existan ahí.
 
-Uso:  python3 scripts/inventario.py [--ahora AAAA-MM-DD]
+Uso:  python3 scripts/inventario.py [--ahora AAAA-MM-DD] [--barrido]
+
+Barrido 12-13 meses (--barrido): la sesión guarda en data/sweep/<clave>.txt solo los IDs de hilo que devuelve
+search_threads(query="from:X newer_than:13m", view=THREAD_VIEW_IDS_ONLY) (uno por línea). La fecha se decodifica
+del propio ID (sin leer metadatos ni cuerpos) y se clasifica por meses naturales.
 Solo biblioteca estándar.
 """
 import argparse
@@ -46,6 +50,8 @@ COLLEAGUES = {"nacho", "jair"}
 FREEMAIL = {"gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "msn.com", "icloud.com", "live.com"}
 VIA = re.compile(r"^'?(.+?)'?\s+via\s+(.+)$")
 NO_CLASIF = "?"
+# Categorías propuestas que aún NO están en rules/categories.yaml (hasta que Cecil las valide).
+PROPUESTAS = {"administracion-publica"}
 
 try:
     from zoneinfo import ZoneInfo
@@ -222,17 +228,60 @@ def pct(a, b):
     return f"{(100.0 * a / b):.0f} %" if b else "0 %"
 
 
+
+# ---------------------------------------------------------------- barrido de recurrencias (13 meses)
+def id_to_date(tid):
+    """El ID hex de hilo de Gmail codifica el inicio del hilo: int(id,16)>>20 = epoch ms (error ~2 s)."""
+    return dt.datetime.fromtimestamp((int(tid, 16) >> 20) / 1000, dt.timezone.utc).astimezone(TZ)
+
+
+def clasifica_recurrencia(fechas, ahora, meses=13):
+    """Cubos por mes natural (no mediana de huecos: AEAT/gestoría mandan en racimos).
+    mensual >=10 de 14 meses naturales activos; trimestral 3-5 meses activos a ~3 de distancia;
+    anual 1-2 meses activos separados ~12; si no, irregular (racimos) o puntual."""
+    act = sorted({(f.year * 12 + f.month - 1) for f in fechas})
+    n = len(act)
+    gaps = [b - a for a, b in zip(act, act[1:])]
+    if n >= 10:
+        return "mensual", n
+    if 3 <= n <= 5 and gaps and statistics.median(gaps) in (3, 4) and max(gaps) <= 5:
+        return "trimestral", n
+    if 1 <= n <= 2 and (n == 1 or 11 <= gaps[0] <= 13):
+        return "anual/puntual", n
+    return "irregular (racimos)", n
+
+
+def barrido(ahora):
+    out = ["# Barrido de recurrencias · ventana de 13 meses (solo IDs de hilo)\n",
+           f"- Generado: {ahora} · `python3 scripts/inventario.py --barrido`. Fechas decodificadas del ID del hilo (inicio del hilo).",
+           "- Ventana de **13 meses** (oct-2025 a nov-2026 = 14 meses naturales) a propósito: en 12 una renovación anual aparece una sola vez.",
+           "- **Límite:** no es un barrido completo del buzón (5.975 hilos en bandeja, más archivados): son consultas por remitente/patrón. "
+           "Las consultas con muchos resultados (PayPal, Open Arms, BBVA, Workspace) solo recogen la primera página (50 hilos más recientes).\n",
+           "| Fichero | Hilos | Meses activos | Tipo | Primer → último |", "|---|---|---|---|---|"]
+    for fn in sorted(glob.glob(os.path.join(DATA, "sweep", "*.txt"))):
+        ids = [l.strip() for l in open(fn) if l.strip()]
+        fs = sorted(id_to_date(i) for i in ids)
+        tipo, n = clasifica_recurrencia(fs, ahora)
+        out.append(f"| {os.path.basename(fn)[:-4]} | {len(ids)} | {n}/14 | {tipo} | {fs[0].date()} → {fs[-1].date()} |")
+    path = os.path.join(ROOT, "reports", "recurrencias-13m.md")
+    open(path, "w", encoding="utf-8").write("\n".join(out) + "\n")
+    print("escrito", path)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ahora", default=None)
+    ap.add_argument("--barrido", action="store_true", help="recurrencias 13 meses desde data/sweep/*.txt")
     args = ap.parse_args()
+    if args.barrido:
+        return barrido(dt.date.fromisoformat(args.ahora) if args.ahora else dt.date.today())
 
     cat_ids = load_cat_ids()
     rows, bad = load_threads()
     if not rows:
         sys.exit("No hay datos en data/threads*.tsv")
     for _, _, c, _, _ in R:
-        assert c == NO_CLASIF or c in cat_ids, f"categoría inexistente en categories.yaml: {c}"
+        assert c == NO_CLASIF or c in cat_ids or c in PROPUESTAS, f"categoría inexistente en categories.yaml: {c}"
 
     T = sorted(rows.values(), key=lambda t: t["when"])
     total = len(T)

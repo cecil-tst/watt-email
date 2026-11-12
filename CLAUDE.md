@@ -12,9 +12,20 @@ suscripciones y cuentas de usuario en plataformas digitales.
 - Solo este buzón. Nunca otros buzones (Gmail personal, Hotmail) aunque estén accesibles.
 - Idioma de trabajo: español. Respuestas de email: formales y concisas, firmadas como Cecil Servan.
 
+## CAMBIO DE FASE (regla supermandatoria)
+- Cuando una fase termine, o Cecil hable de cambiar de fase, **Claude propone abrir una sesión nueva «WATT - fase N»**
+  y entrega las instrucciones y un prompt listo para pegar (con `/advisor opus`).
+- **Nunca** se empieza trabajo de una fase nueva en la misma sesión que la anterior, a no ser que Claude lo pregunte
+  y Cecil lo apruebe de forma expresa en esa sesión.
+- Integración en `main`: la hace siempre Claude (abre y fusiona el PR), solo tras aprobación o solicitud expresa de Cecil.
+  Cecil nunca tiene que integrar a mano. Cada fase se integra en su propio PR; no se mezclan fases en un PR.
+
 ## Fase actual
-**FASE 1 — solo lectura.** No etiquetar, archivar, mover, borrar, marcar como leído, crear filtros,
-crear borradores ni enviar nada. Cecil actualizará esta línea al cambiar de fase.
+**FASE 1 — cerrada el 2026-11-12.** Clasificación terminada: taxonomía y reglas v1 validadas por Cecil en `rules/categories.yaml`.
+- Una sesión sobre `main` sigue en solo lectura: no etiquetar, archivar, mover, borrar, marcar como leído, crear filtros,
+  crear borradores ni enviar nada.
+- La **fase 2 (organizar)** se trabaja en la sesión «WATT - fase 2», sobre la rama `claude/watt-fase-2`. Esa rama lleva su
+  propia línea «FASE 2» y se integra en `main` con PR cuando Cecil lo apruebe. Hasta entonces, `main` dice fase 1.
 
 ## Reglas de operación
 0. **Economía de uso (plan Pro):** el trabajo pesado y repetible (recuentos, agrupaciones por remitente/dominio,
@@ -26,6 +37,11 @@ crear borradores ni enviar nada. Cecil actualizará esta línea al cambiar de fa
 2. **Sesión principal:** es la única que ejecuta acciones de escritura, y solo tras aprobación explícita de Cecil
    sobre una lista concreta (IDs de mensaje + acción). "Parece bien" sobre un resumen no es aprobación de ejecución.
 3. **Nunca enviar emails.** En fase 3 solo se crean borradores; Cecil los revisa y envía.
+   **Única excepción (autorizada por Cecil el 2026-11-12):** *reenviar* (herramienta `forward`) mensajes que traigan
+   adjunto de factura/recibo al buzón de ingesta de Holded, `parametros.holded_inbox` en `rules/categories.yaml`.
+   Solo en fase 4, solo tras aprobación de una lista concreta de IDs (regla 2), a ese único destinatario, y cada
+   reenvío se registra en el log (`action: forward`). Ningún otro destinatario ni tipo de envío.
+   Filtro por fecha de recepción (`parametros.reenvio_holded`): SaaS desde el 2026-07-01; proveedores solo posteriores al 2026-11-01.
 4. **Nada irreversible** (borrar, vaciar papelera, darse de baja de listas, pagar) sin confirmación individual.
 5. **Mínimo contenido:** para clasificar, usar remitente, dominio, asunto, fecha, etiquetas y fragmento.
    Leer el cuerpo completo solo cuando sea necesario para decidir.
@@ -74,10 +90,10 @@ No usar el snooze nativo de Gmail.
 Este proyecto se gestiona desde escritorio, web (claude.ai/code) y móvil, sobre sesiones en la nube.
 - **El repositorio es la única fuente de estado.** No depender de rutas locales ni de memoria de una sesión concreta.
 - Al terminar cada tarea: actualizar `STATUS.md`, hacer commit con mensaje descriptivo y push.
-- Si una sesión trabaja en rama propia, la sesión principal integra en `main` solo lo validado por Cecil.
+- Si una sesión trabaja en rama propia, Claude integra en `main` (PR + fusión) solo lo validado por Cecil o cuando Cecil lo pida.
 - Escribir resúmenes y tablas de validación legibles en móvil: breves, máximo ~10 filas por bloque,
   con IDs cortos para aprobar por número (p. ej. "apruebo 1-4 y 7").
 - Existe un clon local de solo consulta que se actualiza con `git pull --ff-only`. Nunca asumir que hay
   cambios locales pendientes; GitHub (`main`) es la fuente de verdad.
-- **Nunca** guardar credenciales, tokens ni contraseñas en el repositorio. El acceso a Gmail es por el conector
+- **Nunca** guardar credenciales, tokens ni contraseñas en el repositorio (la dirección de ingesta de Holded no es una credencial y Cecil autorizó guardarla en `rules/categories.yaml`). El acceso a Gmail es por el conector
   (OAuth); cualquier otra credencial futura (Holded, Dropbox) va en las variables del entorno cloud.

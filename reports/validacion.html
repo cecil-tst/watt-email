@@ -1,0 +1,237 @@
+<title>Validación WATT</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Concepto: lista de fichas de triaje, una por patrón de remitente; barra fija con progreso y copia de decisiones. */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --fg:#161b22; --muted:#5b6573; --line:#d9dde3;
+  --accent:#0b6b63; --accent-fg:#ffffff; --accent-soft:#dff1ee;
+  --rec:#8a5a00; --rec-soft:#fbefd2; --done:#1c6b3a; --done-soft:#dcf1e3; --warn:#a3321f;
+  --font-text:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-head:'Space Grotesk','Inter',system-ui,sans-serif;
+  --font-mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1319; --surface:#171d26; --fg:#e7ebf0; --muted:#98a3b3; --line:#2b3441;
+  --accent:#4cc3b5; --accent-fg:#06201d; --accent-soft:#12302d;
+  --rec:#f0c36a; --rec-soft:#3a2d10; --done:#6fd192; --done-soft:#123322; --warn:#ff8f7a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1319; --surface:#171d26; --fg:#e7ebf0; --muted:#98a3b3; --line:#2b3441;
+  --accent:#4cc3b5; --accent-fg:#06201d; --accent-soft:#12302d;
+  --rec:#f0c36a; --rec-soft:#3a2d10; --done:#6fd192; --done-soft:#123322; --warn:#ff8f7a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-text);font-size:15px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--surface)}
+.wrap{max-width:760px;margin:0 auto}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--surface);border-bottom:1px solid var(--line);
+  margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-left,0px)) 10px}
+.bar-in{max-width:760px;margin:0 auto;display:grid;gap:8px}
+h1{font:600 18px/1.2 var(--font-head);margin:0;text-wrap:balance}
+.prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.prog b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.meter>i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+select,button,textarea{font:inherit;color:inherit}
+select{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;max-width:100%}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:var(--bg);border:0;padding:8px 12px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
+button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lead{margin:16px 0;color:var(--muted);font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px;display:grid;gap:10px;min-width:0}
+.card.done{border-color:var(--done)}
+.head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.head h2{font:600 16px/1.25 var(--font-head);margin:0;min-width:0;overflow-wrap:anywhere}
+.id{font:600 12px var(--font-mono);background:var(--accent-soft);color:var(--accent);padding:3px 7px;border-radius:6px;flex:none}
+.pill{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--rec-soft);color:var(--rec);flex:none}
+.card.done .pill{background:var(--done-soft);color:var(--done)}
+.pat{font:12px/1.4 var(--font-mono);color:var(--muted);overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--fg);font-variant-numeric:tabular-nums}
+.ej{font-size:13px;border-left:3px solid var(--line);padding-left:8px;color:var(--muted);overflow-wrap:anywhere}
+.cat{font-size:12px;color:var(--muted)}
+.cat b{color:var(--fg)}
+details.reglas{font-size:13px}
+details.reglas summary{cursor:pointer;color:var(--accent)}
+.reglas ul{margin:6px 0 0;padding-left:18px;display:grid;gap:4px}
+.reglas li span{color:var(--muted)}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;display:grid;gap:3px;min-width:0}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt .k{font:600 13px var(--font-mono);color:var(--accent)}
+.opt .t{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.opt .c{font-weight:600}
+.opt .a{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.badge{font-size:11px;background:var(--rec-soft);color:var(--rec);padding:1px 7px;border-radius:99px}
+.otra textarea{width:100%;margin-top:6px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;min-height:64px;resize:vertical}
+.nota{font-size:13px;color:var(--muted)}
+.foot{display:flex;gap:8px;justify-content:flex-end}
+.btn{background:var(--accent);color:var(--accent-fg);border:0;border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line);font-weight:500}
+.empty{text-align:center;color:var(--muted);padding:32px 0}
+.export{display:grid;gap:8px;margin:20px 0}
+.export label{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.export textarea{width:100%;min-height:96px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;font:12px/1.4 var(--font-mono)}
+.msg{font-size:13px;color:var(--done);min-height:18px}
+@media (prefers-reduced-motion:reduce){.meter>i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="bar"><div class="bar-in">
+    <h1>Validación WATT · fase 1</h1>
+    <div class="prog"><span><b id="n-done">0</b> / <b id="n-all">0</b> decididos</span><div class="meter"><i id="meter"></i></div></div>
+    <div class="filters">
+      <select id="f-cat" aria-label="Filtrar por categoría"></select>
+      <div class="seg" role="group" aria-label="Filtrar por estado">
+        <button type="button" data-st="all" aria-pressed="true">Todos</button>
+        <button type="button" data-st="pend" aria-pressed="false">Pendientes</button>
+        <button type="button" data-st="done" aria-pressed="false">Decididos</button>
+      </div>
+    </div>
+  </div></header>
+
+  <p class="lead">Una ficha por patrón. La opción marcada con «Recomendada» viene preseleccionada. Toca una opción para decidir, o «Confirmar» para aceptar la que ves. Tus elecciones se guardan en este navegador. Aquí no hay cuerpos de email ni datos sensibles.</p>
+  <main id="list"></main>
+
+  <section class="export" aria-label="Copiar decisiones">
+    <label><input type="checkbox" id="inc-pend"> Incluir los pendientes con la opción recomendada</label>
+    <button type="button" class="btn" id="copy">Copiar decisiones</button>
+    <div class="msg" id="msg" role="status"></div>
+    <textarea id="out" readonly aria-label="Decisiones en texto compacto" placeholder="Aquí aparece el texto para pegar en la sesión."></textarea>
+    <div><button type="button" class="btn ghost" id="reset">Borrar mis selecciones</button></div>
+  </section>
+</div>
+
+<script>
+(function(){
+var DATA={"version": "1", "fecha": "2026-11-10", "fase": 1, "generado_por": "sesion principal (sin hilos hijos)", "nota": "Propuesta. No se ha escrito nada en el buzón ni en rules/categories.yaml.", "categorias": [{"id": "spam", "nombre": "Spam"}, {"id": "newsletters", "nombre": "Newsletters"}, {"id": "info-servicio", "nombre": "Info de servicio"}, {"id": "conversaciones", "nombre": "Conversaciones"}, {"id": "ofertas-comerciales", "nombre": "Ofertas comerciales"}, {"id": "alertas", "nombre": "Alertas"}, {"id": "recordatorios-suscripcion", "nombre": "Recordatorios/renovación"}, {"id": "pagos-cobros", "nombre": "Pagos y cobros"}, {"id": "facturas-proveedores", "nombre": "Facturas proveedores"}, {"id": "facturas-saas", "nombre": "Facturas SaaS"}, {"id": "bancos", "nombre": "Bancos"}, {"id": "impuestos", "nombre": "Impuestos/gestoría"}, {"id": "cuentas-usuario", "nombre": "Cuentas de usuario"}, {"id": "administracion-publica", "nombre": "Administración pública (NUEVA)"}, {"id": "etiquetas", "nombre": "Etiquetas existentes"}, {"id": "otros", "nombre": "Otros"}], "casos": [{"id": "c01", "tipo": "remitente", "titulo": "AEAT", "patron": "AgenciaTributaria@correo.aeat.es", "hilos_90d": 10, "hilos_13m": "31", "recurrencia": "mensual (13/14 meses, en racimos)", "ejemplo": "Aviso de notificación / comunicación AEAT", "categoria": "administracion-publica", "opciones": [{"k": "A", "categoria": "administracion-publica", "f2": "Etiquetar y mantener en bandeja (tienen plazo)", "f4": "PDF → Drive/Impuestos", "recomendada": true}, {"k": "B", "categoria": "impuestos", "f2": "Etiquetar y mantener en bandeja", "f4": "PDF → Drive/Impuestos", "recomendada": false}, {"k": "C", "categoria": "administracion-publica", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": false}], "nota": "El asunto es genérico: la acción exacta depende de que sean notificaciones con plazo."}, {"id": "c02", "tipo": "remitente", "titulo": "Gestoría CVE Advocats", "patron": "@cve-advocats.com", "hilos_90d": 9, "hilos_13m": "42", "recurrencia": "mensual (12/14 meses)", "ejemplo": "Re: documentación / modelos trimestrales", "categoria": "impuestos", "opciones": [{"k": "A", "categoria": "impuestos", "f2": "Etiquetar (GESTOR) y mantener en bandeja", "f4": "Adjuntos PDF → Drive/Gestoría", "recomendada": true}, {"k": "B", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja", "f4": "—", "recomendada": false}], "nota": "9 hilos con 4 PDF en 90 d. Hilo de conversación real: no archivar solo."}, {"id": "c03", "tipo": "remitente", "titulo": "Gencat · plataforma de contractació", "patron": "plataforma.contractacio@gencat.cat", "hilos_90d": 5, "hilos_13m": "≥50 (con c04)", "recurrencia": "irregular", "ejemplo": "Novetats de E2343 Consorci de Serveis…", "categoria": "administracion-publica", "opciones": [{"k": "A", "categoria": "administracion-publica", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "administracion-publica", "f2": "Etiquetar y mantener en bandeja", "f4": "—", "recomendada": false}, {"k": "C", "categoria": "info-servicio", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": false}], "nota": "Novedades de un expediente de licitación. Si Cecil sigue ese expediente, B."}, {"id": "c04", "tipo": "remitente", "titulo": "CSUC · avisos de notificación", "patron": "Consorci de Serveis Universitaris de Catalunya", "hilos_90d": 4, "hilos_13m": "≥50 (con c03)", "recurrencia": "irregular", "ejemplo": "IMPORTANT: Avís de notificació de…", "categoria": "administracion-publica", "opciones": [{"k": "A", "categoria": "administracion-publica", "f2": "Etiquetar y mantener en bandeja (notificación con plazo)", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "administracion-publica", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": false}], "nota": "Asunto marcado IMPORTANT. No se ha leído el cuerpo."}, {"id": "c05", "tipo": "remitente", "titulo": "Avisos puntuales de caducidad", "patron": "Junta AFA, Mosyle, Sanity, Registradores", "hilos_90d": 4, "hilos_13m": "1-2 por año", "recurrencia": "anual/puntual", "ejemplo": "Fwd: Notificación de caducidad de certi…", "categoria": "recordatorios-suscripcion", "opciones": [{"k": "A", "categoria": "recordatorios-suscripcion", "f2": "Etiquetar + pseudo-snooze hasta fecha de caducidad", "f4": "Acción manual de Cecil", "recomendada": true}, {"k": "B", "categoria": "alertas", "f2": "Etiquetar y mantener en bandeja", "f4": "—", "recomendada": false}, {"k": "C", "categoria": "administracion-publica", "f2": "Etiquetar y mantener en bandeja", "f4": "—", "recomendada": false}], "nota": "Casos de 1 hilo cada uno; sirve de regla común. El certificado de Junta AFA es un reenvío."}, {"id": "c06", "tipo": "remitente", "titulo": "OpenAI / ChatGPT Business (mixto)", "patron": "noreply@tm.openai.com", "hilos_90d": 12, "hilos_13m": "14 (desde 30-sep)", "recurrencia": "racimos recientes", "ejemplo": "WATT is out of credits", "categoria": "alertas", "opciones": [{"k": "A", "categoria": "(por asunto)", "f2": "Aplicar reglas por asunto, etiquetar + archivar salvo renovación", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "alertas", "f2": "Todo a Alertas, etiquetar y mantener", "f4": "—", "recomendada": false}, {"k": "C", "categoria": "cuentas-usuario", "f2": "Solo etiquetar", "f4": "—", "recomendada": false}], "reglas": [{"asunto": "credit balance has been reloaded / auto-reload", "categoria": "pagos-cobros"}, {"asunto": "out of credits / Add credits / credits remaining / requested more usage", "categoria": "alertas"}, {"asunto": "Business subscription renews soon", "categoria": "recordatorios-suscripcion"}, {"asunto": "exportación de datos / app's access updated / Your ChatGPT code is", "categoria": "cuentas-usuario"}], "nota": "Aparece desde 30-sep: no hay histórico para saber si la renovación es mensual o anual (renueva el día 1)."}, {"id": "c07", "tipo": "remitente", "titulo": "DreamHost (mixto)", "patron": "support@dreamhost.com", "hilos_90d": 8, "hilos_13m": "66", "recurrencia": "mensual (14 meses, ~5/mes)", "ejemplo": "[cecser …] <dominio>: Domain Renewal Notice", "categoria": "recordatorios-suscripcion", "opciones": [{"k": "A", "categoria": "(por asunto)", "f2": "Aplicar reglas por asunto; recibos archivados con etiqueta", "f4": "Recibos PDF → Drive/Facturas", "recomendada": true}, {"k": "B", "categoria": "facturas-saas", "f2": "Todo a facturas-saas", "f4": "Recibos PDF → Drive/Facturas", "recomendada": false}, {"k": "C", "categoria": "info-servicio", "f2": "Solo etiquetar", "f4": "—", "recomendada": false}], "reglas": [{"asunto": "Domain Name Renewal Receipt / renewal success! / PayPal AutoPay Payment Receipt", "categoria": "facturas-saas"}, {"asunto": "Domain Renewal Notice (último aviso)", "categoria": "recordatorios-suscripcion"}, {"asunto": "database server upgrade / Update passwords for all users", "categoria": "info-servicio"}], "nota": "Hay dominios de clientes con hilo propio (renovación de 1 año, p. ej. oct y dic). La reventa a cliente sería fase 4: a validar."}, {"id": "c08", "tipo": "remitente", "titulo": "Holded no-reply (mixto)", "patron": "no-reply@send.holded.com", "hilos_90d": 7, "hilos_13m": "33", "recurrencia": "mensual (13/14 meses)", "ejemplo": "Factura A-… de <proveedor> a We are The Tellers", "categoria": "facturas-proveedores", "opciones": [{"k": "A", "categoria": "(por asunto)", "f2": "Reglas por asunto; facturas con etiqueta Facturas + __POR PAGAR", "f4": "Enlace de factura → Holded (registrar)", "recomendada": true}, {"k": "B", "categoria": "facturas-proveedores", "f2": "Todo a facturas-proveedores", "f4": "—", "recomendada": false}], "reglas": [{"asunto": "Factura A-… de … a We are The Tellers", "categoria": "facturas-proveedores"}, {"asunto": "Código de verificación (2FA)", "categoria": "cuentas-usuario"}], "nota": "La factura llega ~14 de cada mes con vencimiento a 7 días: candidata a pseudo-snooze. 2FA: no se guarda nada."}, {"id": "c09", "tipo": "remitente", "titulo": "Holded (equipo, soporte, marketing)", "patron": "El equipo de Holded [vía grupo], Eulàlia G. H.", "hilos_90d": 8, "hilos_13m": "—", "recurrencia": "irregular", "ejemplo": "Novedades Holded / Soporte", "categoria": "newsletters", "opciones": [{"k": "A", "categoria": "newsletters", "f2": "Etiquetar + archivar (soporte → info-servicio)", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "info-servicio", "f2": "Etiquetar y mantener", "f4": "—", "recomendada": false}]}, {"id": "c10", "tipo": "remitente", "titulo": "WordPress / Wordfence (webs propias y de clientes)", "patron": "wordpress@thefoodtellers.com y otros dominios", "hilos_90d": 7, "hilos_13m": "≥50", "recurrencia": "diaria + resumen semanal", "ejemplo": "[Wordfence Alert] Problems found on …", "categoria": "alertas", "opciones": [{"k": "A", "categoria": "(por asunto)", "f2": "Reglas por asunto; etiqueta [Wordfence Alert] ya existente", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "info-servicio", "f2": "Todo etiquetado + archivado", "f4": "—", "recomendada": false}], "reglas": [{"asunto": "Problems found / Acceso de administración / recuperación de contraseña", "categoria": "alertas"}, {"asunto": "Actividad de Wordfence (resumen semanal)", "categoria": "info-servicio"}, {"asunto": "Pendientes de moderación (comentarios)", "categoria": "info-servicio"}, {"asunto": "Restablecer la contraseña", "categoria": "cuentas-usuario"}], "nota": "Etiqueta existente [Wordfence Alert]: ~4.000 hilos acumulados."}, {"id": "c11", "tipo": "remitente", "titulo": "Formulario web TST", "patron": "no-reply@the-storytellers.es", "hilos_90d": 6, "hilos_13m": "7 (8 muestras)", "recurrencia": "irregular", "ejemplo": "TST - CONTACTO WEB", "categoria": "ofertas-comerciales", "opciones": [{"k": "A", "categoria": "ofertas-comerciales", "f2": "Etiquetar y mantener 1 mes (revisar si hay leads reales)", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "spam", "f2": "Marcar spam (confirmación)", "f4": "—", "recomendada": false}, {"k": "C", "categoria": "conversaciones", "f2": "Etiquetar y mantener", "f4": "—", "recomendada": false}], "nota": "Los 7 fragmentos vistos eran captación en frío (tráfico, anuncios, SEO). Con un lead real el asunto es idéntico: no se distingue sin cuerpo."}, {"id": "c12", "tipo": "remitente", "titulo": "PayPal [vía grupo]", "patron": "PayPal via hola@", "hilos_90d": 5, "hilos_13m": "≥50 (primera página)", "recurrencia": "mensual (12/14)", "ejemplo": "Recibo de su pago a …", "categoria": "pagos-cobros", "opciones": [{"k": "A", "categoria": "(por asunto)", "f2": "Reglas por asunto; recibos etiquetados + archivados", "f4": "Recibo → Drive/Pagos", "recomendada": true}, {"k": "B", "categoria": "pagos-cobros", "f2": "Todo a pagos-cobros", "f4": "—", "recomendada": false}], "reglas": [{"asunto": "Recibo de su pago", "categoria": "pagos-cobros"}, {"asunto": "resto (promoción, novedades)", "categoria": "newsletters"}]}, {"id": "c13", "tipo": "remitente", "titulo": "Open Arms (donación)", "patron": "info@openarms.es, recibos vía PayPal", "hilos_90d": 3, "hilos_13m": "≥50 (primera página)", "recurrencia": "mensual (12/14)", "ejemplo": "Recibo / Gracias por tu donación", "categoria": "pagos-cobros", "opciones": [{"k": "A", "categoria": "pagos-cobros", "f2": "Recibos: etiquetar + archivar; boletín: newsletters", "f4": "Recibo → Drive/Donaciones", "recomendada": true}, {"k": "B", "categoria": "newsletters", "f2": "Todo a newsletters", "f4": "—", "recomendada": false}], "nota": "La consulta mezcla otras menciones; el recuento es orientativo."}, {"id": "c14", "tipo": "remitente", "titulo": "Justicia Alimentaria [vía grupo]", "patron": "Justicia Alimentaria via hola@", "hilos_90d": 4, "hilos_13m": "—", "recurrencia": "irregular", "ejemplo": "HAGAMOS HUELGA DE COMPRAS …", "categoria": "newsletters", "opciones": [{"k": "A", "categoria": "newsletters", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "conversaciones", "f2": "Etiquetar y mantener (es entidad/cliente)", "f4": "—", "recomendada": false}], "nota": "Recomendación débil: el inventario anotó «boletín y presupuesto». Decide tú."}, {"id": "c15", "tipo": "remitente", "titulo": "Particulares: candidaturas y consultas", "patron": "7 remitentes gmail/outlook", "hilos_90d": 7, "hilos_13m": "—", "recurrencia": "puntual", "ejemplo": "Application for Internship – …; Re: Envato Elements", "categoria": "conversaciones", "opciones": [{"k": "A", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "otros", "f2": "Candidaturas a «otros», resto a conversaciones", "f4": "—", "recomendada": false}], "nota": "Requieren lectura humana; no se abrieron cuerpos."}, {"id": "c16", "tipo": "remitente", "titulo": "Captación en frío (11 remitentes sueltos)", "patron": "seoprojects, tryember, bigfidelity, bookedlab, hypeauditorsapp…", "hilos_90d": 14, "hilos_13m": "—", "recurrencia": "puntual", "ejemplo": "Propuesta colaboración / Quick question", "categoria": "ofertas-comerciales", "opciones": [{"k": "A", "categoria": "ofertas-comerciales", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "spam", "f2": "Marcar spam (confirmación individual)", "f4": "—", "recomendada": false}], "nota": "Incluye el alias cecil.servan@ (solo capta ofertas)."}, {"id": "c17", "tipo": "remitente", "titulo": "Contactos sueltos (CRG, Canal…)", "patron": "crg.eu, canal.es", "hilos_90d": 2, "hilos_13m": "—", "recurrencia": "puntual", "ejemplo": "RE: Slidedecks …; Test", "categoria": "conversaciones", "opciones": [{"k": "A", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "info-servicio", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": false}]}, {"id": "c18", "tipo": "sensible", "titulo": "Hilo UB con credenciales en claro (sistema retirado)", "patron": "hilo 1a0f…8834 · infoweb@ub.edu", "hilos_90d": 1, "hilos_13m": "1", "recurrencia": "puntual", "ejemplo": "Noves credencials …", "categoria": "otros", "opciones": [{"k": "A", "categoria": "otros", "f2": "Archivar con etiqueta Sensible", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "otros", "f2": "Borrar en fase 2 (confirmación individual)", "f4": "—", "recomendada": false}], "nota": "No se abrió el cuerpo. Aunque el sistema esté retirado, rotar la contraseña si se reutilizó."}, {"id": "c19", "tipo": "remitente", "titulo": "Newsletters de alta frecuencia", "patron": "IA Hub, Atlassian (marketing), John Turner/WPVibe, SiteGround Web Hosting, Emexs, OpenAI Ads, Claude Team…", "hilos_90d": 80, "hilos_13m": "—", "recurrencia": "semanal o más", "ejemplo": "Newsletter semanal / novedades", "categoria": "newsletters", "opciones": [{"k": "A", "categoria": "newsletters", "f2": "Etiquetar + archivar por remitente (filtro)", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "newsletters", "f2": "Solo etiquetar, dejar en bandeja", "f4": "—", "recomendada": false}, {"k": "C", "categoria": "newsletters", "f2": "Etiquetar + archivar y proponer baja (confirmación individual)", "f4": "Baja manual", "recomendada": false}], "nota": "≈ 80 de 355 hilos (23 %). La baja de listas nunca es automática (regla 4)."}, {"id": "c20", "tipo": "remitente", "titulo": "Atlassian Jira/Confluence (po.atlassian.net)", "patron": "noreply@po.atlassian.net", "hilos_90d": 5, "hilos_13m": "—", "recurrencia": "irregular", "ejemplo": "Actividad en Jira/Confluence", "categoria": "info-servicio", "opciones": [{"k": "A", "categoria": "info-servicio", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "conversaciones", "f2": "Etiquetar y mantener", "f4": "—", "recomendada": false}]}, {"id": "c21", "tipo": "remitente", "titulo": "Códigos y accesos (2FA, verificación)", "patron": "GitHub, Vercel, Holded 2FA, WPVibe, ChatGPT, Link", "hilos_90d": 26, "hilos_13m": "—", "recurrencia": "continua", "ejemplo": "Código de verificación …", "categoria": "cuentas-usuario", "opciones": [{"k": "A", "categoria": "cuentas-usuario", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "cuentas-usuario", "f2": "Mantener en bandeja", "f4": "—", "recomendada": false}], "nota": "Los fragmentos incluyen códigos: no se guardan. Borrado solo con confirmación individual."}, {"id": "c22", "tipo": "remitente", "titulo": "Alertas de plataformas (GitHub, Vercel)", "patron": "noreply@github.com, system@vercel.com", "hilos_90d": 8, "hilos_13m": "—", "recurrencia": "continua", "ejemplo": "[repo] PR / deployment", "categoria": "alertas", "opciones": [{"k": "A", "categoria": "alertas", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "alertas", "f2": "Mantener en bandeja", "f4": "—", "recomendada": false}]}, {"id": "c23", "tipo": "remitente", "titulo": "Informes DMARC", "patron": "admin@thefoodtellers.com (vía grupo)", "hilos_90d": 9, "hilos_13m": "—", "recurrencia": "diaria", "ejemplo": "Report Domain: … Submitter: …", "categoria": "info-servicio", "opciones": [{"k": "A", "categoria": "info-servicio", "f2": "Etiquetar + archivar (ya hay etiqueta [NO REVISION])", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "info-servicio", "f2": "Solo etiquetar", "f4": "—", "recomendada": false}], "nota": "Adjuntos ZIP/GZ: no se guardan."}, {"id": "c24", "tipo": "remitente", "titulo": "Google Workspace, Cloud, Search Console", "patron": "workspace-noreply@, cloudplatform-noreply@, sc-noreply@", "hilos_90d": 12, "hilos_13m": "≥50", "recurrencia": "mensual (12/14)", "ejemplo": "Te damos la bienvenida a la suscripción …", "categoria": "info-servicio", "opciones": [{"k": "A", "categoria": "info-servicio", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "recordatorios-suscripcion", "f2": "Facturas/renovación a recordatorios, resto info", "f4": "—", "recomendada": false}]}, {"id": "c25", "tipo": "remitente", "titulo": "cdmon (dominios)", "patron": "no-reply@cdmon.com", "hilos_90d": 9, "hilos_13m": "50", "recurrencia": "mensual (12/14, avisos repetidos por dominio)", "ejemplo": "Recordatorio para la renovación de sus …", "categoria": "recordatorios-suscripcion", "opciones": [{"k": "A", "categoria": "recordatorios-suscripcion", "f2": "Etiquetar + pseudo-snooze hasta la caducidad; último aviso en bandeja", "f4": "Pago manual de Cecil", "recomendada": true}, {"k": "B", "categoria": "recordatorios-suscripcion", "f2": "Etiquetar + archivar todos", "f4": "—", "recomendada": false}], "nota": "Regla útil: la caducidad real puede estar en el cuerpo (fase 4)."}, {"id": "c26", "tipo": "remitente", "titulo": "SiteGround · confirmación de renovación", "patron": "'SiteGround' via hola@", "hilos_90d": 8, "hilos_13m": "15", "recurrencia": "mensual, día 17 (13/14 meses)", "ejemplo": "Confirmación de renovación del servicio", "categoria": "facturas-saas", "opciones": [{"k": "A", "categoria": "facturas-saas", "f2": "Etiquetar (Siteground) + archivar", "f4": "Adjunto/recibo → Drive/Facturas", "recomendada": true}, {"k": "B", "categoria": "recordatorios-suscripcion", "f2": "Etiquetar + archivar", "f4": "—", "recomendada": false}], "nota": "Otros avisos de SiteGround van a newsletters/autoupdate (info-servicio)."}, {"id": "c27", "tipo": "remitente", "titulo": "Recibos SaaS mensuales", "patron": "Google Payments, Dropbox, Metricool, Canva, SumUp", "hilos_90d": 12, "hilos_13m": "≈70", "recurrencia": "mensual (13/14 meses)", "ejemplo": "Gracias por renovar tu plan …", "categoria": "facturas-saas", "opciones": [{"k": "A", "categoria": "facturas-saas", "f2": "Etiquetar (Facturas) + archivar", "f4": "PDF → Drive/Facturas y Holded", "recomendada": true}, {"k": "B", "categoria": "facturas-saas", "f2": "Etiquetar y mantener hasta conciliar (__POR CONCILIAR)", "f4": "PDF → Holded", "recomendada": false}], "nota": "Dropbox y Google Payments tienen 1 hilo/mes exacto: ideal para tarea programada."}, {"id": "c28", "tipo": "remitente", "titulo": "Anthropic (Stripe)", "patron": "invoice+statements+…@stripe.com", "hilos_90d": 6, "hilos_13m": "6 (desde 22-oct)", "recurrencia": "por compra, sin histórico", "ejemplo": "Your receipt from Anthropic, PBC", "categoria": "facturas-saas", "opciones": [{"k": "A", "categoria": "facturas-saas", "f2": "Etiquetar (Facturas) + archivar", "f4": "PDF → Drive/Facturas y Holded", "recomendada": true}, {"k": "B", "categoria": "pagos-cobros", "f2": "Etiquetar y mantener", "f4": "—", "recomendada": false}], "nota": "Cada hilo trae PDF (6/6)."}, {"id": "c29", "tipo": "remitente", "titulo": "Proveedores: rafa, Growth Lab, rmdisseny", "patron": "rafa via hola@, growth-lab.es, rmdisseny.es", "hilos_90d": 6, "hilos_13m": "18", "recurrencia": "mensual (10/14 meses)", "ejemplo": "Factura nº … (PDF adjunto)", "categoria": "facturas-proveedores", "opciones": [{"k": "A", "categoria": "facturas-proveedores", "f2": "Etiquetar (Facturas + __POR PAGAR) y mantener hasta pago", "f4": "PDF → Drive y Holded", "recomendada": true}, {"k": "B", "categoria": "facturas-proveedores", "f2": "Etiquetar + archivar", "f4": "PDF → Drive", "recomendada": false}]}, {"id": "c30", "tipo": "remitente", "titulo": "BBVA · avisos y marketing", "patron": "notificaciones-bbva…, bbva@comunica.bbva.com", "hilos_90d": 7, "hilos_13m": "≥50 (primera página)", "recurrencia": "mensual (12/14)", "ejemplo": "Aviso de movimiento / Oferta BBVA", "categoria": "bancos", "opciones": [{"k": "A", "categoria": "(por remitente)", "f2": "Avisos → bancos (mantener); comunica.bbva → ofertas (archivar)", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "bancos", "f2": "Todo a bancos, etiquetar", "f4": "—", "recomendada": false}], "nota": "La gestora de BBVA (hilo largo de conversación) iría a conversaciones."}, {"id": "c31", "tipo": "remitente", "titulo": "Equipo interno y Trello", "patron": "nacho@the-storytellers.es, Nacho Ballesta, Trello", "hilos_90d": 14, "hilos_13m": "—", "recurrencia": "continua", "ejemplo": "Re: … / Trello: mención", "categoria": "conversaciones", "opciones": [{"k": "A", "categoria": "conversaciones", "f2": "Etiquetar y mantener en bandeja (Trello → info-servicio)", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "conversaciones", "f2": "Mantener todo sin etiquetar", "f4": "—", "recomendada": false}]}, {"id": "c32", "tipo": "etiqueta", "titulo": "Etiquetas de alias: TST/HOLA · TFT/Hola · TFT · TST", "patron": "etiquetas de usuario", "hilos_90d": 126, "hilos_13m": "totales: 7.185 / 5.198 / 1.191 / 4.254", "recurrencia": "—", "ejemplo": "(etiqueta)", "categoria": "etiquetas", "opciones": [{"k": "A", "categoria": "—", "f2": "Respetar: es la dimensión «entidad/alias»; la categoría se añade aparte", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "—", "f2": "Solo lectura: no se toca ni se añade categoría", "f4": "—", "recomendada": false}], "nota": "Propuesta: etiqueta de categoría WATT/<categoría> además de la tuya, nunca en su lugar."}, {"id": "c33", "tipo": "etiqueta", "titulo": "Etiquetas de flujo: Facturas · __POR PAGAR · __POR CONCILIAR", "patron": "etiquetas de usuario", "hilos_90d": 10, "hilos_13m": "totales: 364 / 5 / 5", "recurrencia": "—", "ejemplo": "(etiqueta)", "categoria": "etiquetas", "opciones": [{"k": "A", "categoria": "facturas-*", "f2": "Facturas = estado archivado; __POR PAGAR/CONCILIAR son estado de flujo (no se tocan)", "f4": "Al pagar/conciliar: cambio manual de Cecil", "recomendada": true}, {"k": "B", "categoria": "facturas-*", "f2": "Mapear Facturas ⇒ facturas-proveedores/SaaS; flujo intacto", "f4": "—", "recomendada": false}]}, {"id": "c34", "tipo": "etiqueta", "titulo": "Etiquetas de filtro: [NO REVISION] · _NO_REVISION_ · SPAMDIGEST · Siteground · [Wordfence Alert]", "patron": "etiquetas de usuario", "hilos_90d": 60, "hilos_13m": "totales: 238 / 763 / 427 / 585 / 226 / 3.999", "recurrencia": "—", "ejemplo": "(etiqueta)", "categoria": "etiquetas", "opciones": [{"k": "A", "categoria": "newsletters / info-servicio", "f2": "Equivalen a «ruido ya triado»: mapear a categoría, no a bandeja", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "—", "f2": "Dejar como están, sin mapear", "f4": "—", "recomendada": false}]}, {"id": "c35", "tipo": "etiqueta", "titulo": "Etiquetas de gestoría y clientes: GESTOR · GESTOR/Impuestos · GESTOR/Nominas · CLIENTE/* · DEV/* · Vice · ICM", "patron": "etiquetas de usuario", "hilos_90d": 0, "hilos_13m": "totales: 92 / 47 / 68 / varios", "recurrencia": "—", "ejemplo": "(etiqueta)", "categoria": "etiquetas", "opciones": [{"k": "A", "categoria": "impuestos / conversaciones", "f2": "GESTOR/* → impuestos; CLIENTE/DEV/Vice/ICM fuera de alcance de WATT", "f4": "—", "recomendada": true}, {"k": "B", "categoria": "—", "f2": "Tratar todas como fuera de alcance", "f4": "—", "recomendada": false}], "nota": "Las etiquetas de cliente parecen de otro trabajo de Cecil; WATT solo gestiona finanzas y administración."}]};
+var KEY='watt-validacion-v'+DATA.version+'-'+DATA.fecha;
+var state={sel:{},otra:{},done:{}};
+var flt={cat:'all',st:'all'};
+var resetArmed=false;
+
+function load(){try{var r=localStorage.getItem(KEY);if(r){var s=JSON.parse(r);if(s&&s.sel){state=s;}}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function rec(c){for(var i=0;i<c.opciones.length;i++){if(c.opciones[i].recomendada)return c.opciones[i].k;}return c.opciones[0].k;}
+function cur(c){return state.sel[c.id]||rec(c);}
+function el(t,cls,txt){var e=document.createElement(t);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+function catName(id){for(var i=0;i<DATA.categorias.length;i++){if(DATA.categorias[i].id===id)return DATA.categorias[i].nombre;}return id;}
+
+function fillCats(){
+  var s=document.getElementById('f-cat');
+  var o=el('option',null,'Todas las categorías');o.value='all';s.appendChild(o);
+  var used={};DATA.casos.forEach(function(c){used[c.categoria]=1;});
+  DATA.categorias.forEach(function(c){if(used[c.id]){var x=el('option',null,c.nombre);x.value=c.id;s.appendChild(x);}});
+  s.addEventListener('change',function(){flt.cat=s.value;render();});
+}
+
+function card(c){
+  var d=!!state.done[c.id], sel=cur(c);
+  var a=el('article','card'+(d?' done':''));a.id='caso-'+c.id;
+  var h=el('div','head');
+  var l=el('div');l.style.cssText='display:grid;gap:6px;min-width:0';
+  var row=el('div');row.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap';
+  row.appendChild(el('span','id',c.id));row.appendChild(el('span','cat','Propuesta: ')) ;
+  row.lastChild.appendChild(el('b',null,catName(c.categoria)));
+  l.appendChild(row);l.appendChild(el('h2',null,c.titulo));
+  h.appendChild(l);h.appendChild(el('span','pill',d?'Decidido':'Pendiente'));a.appendChild(h);
+  a.appendChild(el('div','pat',c.patron));
+  var m=el('div','meta');
+  [['Hilos 90 d',c.hilos_90d],['Hilos 13 m',c.hilos_13m],['Recurrencia',c.recurrencia]].forEach(function(p){
+    var s=el('span',null,p[0]+': ');s.appendChild(el('b',null,String(p[1])));m.appendChild(s);});
+  a.appendChild(m);
+  a.appendChild(el('div','ej','Asunto tipo: '+c.ejemplo));
+  if(c.reglas&&c.reglas.length){
+    var dt=el('details','reglas');dt.appendChild(el('summary',null,'Reglas por asunto ('+c.reglas.length+')'));
+    var ul=el('ul');c.reglas.forEach(function(r){var li=el('li',null,r.asunto+' → ');li.appendChild(el('b',null,r.categoria));ul.appendChild(li);});
+    dt.appendChild(ul);a.appendChild(dt);
+  }
+  var os=el('div','opts');
+  c.opciones.forEach(function(o){
+    var b=el('button','opt');b.type='button';b.setAttribute('aria-pressed',String(sel===o.k));
+    var t=el('div','t');t.appendChild(el('span','k',o.k));t.appendChild(el('span','c',o.categoria));
+    if(o.recomendada)t.appendChild(el('span','badge','Recomendada'));
+    b.appendChild(t);b.appendChild(el('div','a','Fase 2: '+o.f2));
+    if(o.f4&&o.f4!=='—')b.appendChild(el('div','a','Fase 4: '+o.f4));
+    b.addEventListener('click',function(){state.sel[c.id]=o.k;state.done[c.id]=true;save();render(c.id);});
+    os.appendChild(b);
+  });
+  var ob=el('div','opt otra');ob.setAttribute('role','group');
+  var ot=el('button','opt');ot.type='button';ot.setAttribute('aria-pressed',String(sel==='otra'));
+  var t2=el('div','t');t2.appendChild(el('span','k','otra'));t2.appendChild(el('span','c','Otra (texto libre)'));
+  ot.appendChild(t2);
+  ot.addEventListener('click',function(){state.sel[c.id]='otra';save();render(c.id,true);});
+  os.appendChild(ot);
+  if(sel==='otra'){
+    var ta=el('textarea');ta.id='otra-'+c.id;ta.placeholder='Qué categoría y qué acción en fase 2 / fase 4';
+    ta.value=state.otra[c.id]||'';
+    ta.addEventListener('input',function(){state.otra[c.id]=ta.value;save();});
+    ta.addEventListener('blur',function(){if((state.otra[c.id]||'').trim()){state.done[c.id]=true;save();updateTop();}});
+    os.appendChild(ta);
+  }
+  a.appendChild(os);
+  if(c.nota)a.appendChild(el('div','nota',c.nota));
+  var f=el('div','foot');
+  if(d){var u=el('button','btn ghost','Deshacer');u.type='button';u.addEventListener('click',function(){delete state.done[c.id];save();render(c.id);});f.appendChild(u);}
+  else{var k=el('button','btn','Confirmar '+(sel==='otra'?'otra':sel));k.type='button';
+    k.addEventListener('click',function(){state.sel[c.id]=sel;state.done[c.id]=true;save();render(c.id);});f.appendChild(k);}
+  a.appendChild(f);
+  return a;
+}
+
+function visible(c){
+  if(flt.cat!=='all'&&c.categoria!==flt.cat)return false;
+  var d=!!state.done[c.id];
+  if(flt.st==='pend'&&d)return false;
+  if(flt.st==='done'&&!d)return false;
+  return true;
+}
+function updateTop(){
+  var n=DATA.casos.length,d=0;DATA.casos.forEach(function(c){if(state.done[c.id])d++;});
+  document.getElementById('n-done').textContent=d;document.getElementById('n-all').textContent=n;
+  document.getElementById('meter').style.width=(n?100*d/n:0)+'%';
+}
+function render(focusId,focusText){
+  var y=window.scrollY;var list=document.getElementById('list');list.textContent='';
+  var shown=DATA.casos.filter(visible);
+  shown.forEach(function(c){list.appendChild(card(c));});
+  if(!shown.length)list.appendChild(el('div','empty','Ningún caso con este filtro.'));
+  updateTop();
+  if(focusText&&focusId){var t=document.getElementById('otra-'+focusId);if(t)t.focus();}
+  window.scrollTo(0,y);
+}
+
+function compact(){
+  var inc=document.getElementById('inc-pend').checked,parts=[];
+  DATA.casos.forEach(function(c){
+    var s=cur(c);
+    if(state.done[c.id]||inc){
+      if(s==='otra'){var tx=(state.otra[c.id]||'').replace(/'/g,'’').replace(/\s+/g,' ').trim();parts.push(c.id+"=otra:'"+tx+"'");}
+      else parts.push(c.id+'='+s);
+    }
+  });
+  return parts.join('; ');
+}
+function copy(){
+  var txt=compact(),out=document.getElementById('out'),msg=document.getElementById('msg');
+  out.value=txt;
+  if(!txt){msg.textContent='Todavía no hay decisiones que copiar.';return;}
+  function fallback(){out.focus();out.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+    msg.textContent=ok?'Copiado. Pégalo en la sesión.':'Selecciona el texto de abajo y cópialo a mano.';}
+  try{navigator.clipboard.writeText(txt).then(function(){msg.textContent='Copiado. Pégalo en la sesión.';},fallback);}catch(e){fallback();}
+}
+
+document.getElementById('copy').addEventListener('click',copy);
+document.getElementById('inc-pend').addEventListener('change',function(){document.getElementById('out').value=compact();});
+document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){
+  flt.st=b.getAttribute('data-st');document.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});render();});});
+var rb=document.getElementById('reset');
+rb.addEventListener('click',function(){
+  if(!resetArmed){resetArmed=true;rb.textContent='Toca otra vez para borrar todo';setTimeout(function(){resetArmed=false;rb.textContent='Borrar mis selecciones';},4000);return;}
+  state={sel:{},otra:{},done:{}};save();resetArmed=false;rb.textContent='Borrar mis selecciones';document.getElementById('out').value='';render();});
+
+load();fillCats();render();
+})();
+</script>
