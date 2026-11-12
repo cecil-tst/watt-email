@@ -1,0 +1,2 @@
+{"ts":"2026-11-12T16:00:23+00:00","session":"main","phase":2,"message_id":"-","from":"-","subject":"-","action":"create_label","detail":"WATT/info-servicio (lote 1; apruebo 1-36)","approved_by":"Cecil","result":"error: conector Gmail sin permiso para crear etiquetas"}
+{"ts":"2026-11-12T16:00:23+00:00","session":"main","phase":2,"message_id":"-","from":"-","subject":"-","action":"create_label","detail":"WATT/alertas (lote 1; apruebo 1-36)","approved_by":"Cecil","result":"error: conector Gmail sin permiso para crear etiquetas"}
