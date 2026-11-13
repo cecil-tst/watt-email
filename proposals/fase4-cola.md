@@ -39,6 +39,7 @@ También pendientes de decisión de baja (regla c19): IA Hub, Atlassian marketin
 
 ## Añadido en fase 2 (2026-11-13)
 - Ivan Berbel, hilo 1a19da16ed9bdca2 (recibido 2026-11-02 > 2026-11-01, 5 PDF): reenviar a Holded; sigue en inbox con `WATT/facturas-proveedores`.
+- Anthropic, hilo 1a1c3c558c8a1aa4 (recibo 2026-11-10, posterior a 2026-07-01): reenviar a Holded; sigue en inbox con `WATT/facturas-saas`.
 
 ## Pendientes de ampliar la cola (se añadirán desde fase 2)
 - Recibos SaaS posteriores al 2026-07-01 de Anthropic/OpenAI/Google/Dropbox que no estaban en la primera página de la consulta (lote 4).
