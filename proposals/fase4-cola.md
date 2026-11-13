@@ -23,7 +23,9 @@ Contenido: solo IDs, remitente y asunto (sin cuerpos).
 
 | 9 | 1a17f6f3547cb68c | WPVibe (vía ai@, Stripe) | Receipt #2347-5869, 19,00 $ (2026-10-27) | Invoice PDF + Receipt PDF (añadido 2026-11-13) |
 
-Estos 9 hilos están etiquetados `WATT/facturas-saas` + `Facturas` y siguen en la bandeja hasta que la fase 4 los reenvíe y archive.
+| 10 | 1a198f16fed58e7b | Google Payments (vía hola@thefoodtellers.com) | Factura Google Workspace nº 5726985100, thefoodtellers.com (2026-11-01) | PDF adjunto verificado (Cecil: a la lista, 2026-11-13) |
+
+Estos 10 hilos están etiquetados `WATT/facturas-saas` + `Facturas` y siguen en la bandeja hasta que la fase 4 los reenvíe y archive.
 Decisión de Cecil (2026-11-12): los de Dropbox y OpenAI SIN PDF adjunto, y todos los de DreamHost, ya se etiquetaron y archivaron en fase 2 (no se reenvían). Sus facturas solo existen como enlace/panel (OpenAI RKGIXTU7-0005, Dropbox B59NY9N6CD4L): si Cecil las quiere en Holded, habrá que descargarlas a mano.
 
 
