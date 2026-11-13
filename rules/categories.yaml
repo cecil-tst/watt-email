@@ -122,7 +122,7 @@ decisiones_lote4:  # Cecil 2026-11-12 («apruebo 1-32»)
   - BBVA promociones (bbva@comunica.bbva.com): ofertas-comerciales + archivar. FASE 4: darse de baja de la lista (confirmacion individual, regla 4; baja manual o por enlace de baja).
   - Boletines de Canva (start@engage.canva.com): FASE 4: darse de baja (confirmacion individual). Sin etiquetar todavia (esperan decision de grupo).
   - WATT/bancos y WATT/pagos-cobros: lo recibido HASTA el 2026-11-09 (incluido) se etiqueta y archiva; lo recibido DESDE el 2026-11-10 y a futuro se etiqueta pero SE MANTIENE EN BANDEJA. Sustituye a «etiquetar + archivar» de pagos-cobros en c06/c12/c13.
-decisiones_lote5:  # Cecil 2026-11-12/13 (resto PENDIENTE de ejecutar: falta «apruebo» por grupo; la etiqueta GESTOR/Impuestos ya se elimino el 2026-11-13)
+decisiones_lote5:  # Cecil 2026-11-12/13. EJECUTADO el 2026-11-13 (apruebo A-F): grupos A-F aplicados; GESTOR/Impuestos eliminada el 2026-11-13
   - Correos de sistema WordPress/Wordfence: etiquetar y archivar todo como leido, tambien lo futuro, salvo algo muy preocupante (alta de usuario, cambios de contrasena, fallos de actualizacion se avisan antes de archivar).
   - AEAT (correo.aeat.es, label WATT/administracion-publica): hasta el 2026-09-30 inclusive etiquetar y archivar como leido; desde el 2026-10-01 y a futuro: etiquetar, marcar NO LEIDO y mantener en bandeja.
   - Gestoria (cve-advocats.com): todos con la etiqueta GESTOR; los claramente de impuestos ademas WATT/impuestos. La etiqueta GESTOR/Impuestos se elimina para siempre (redundante): primero pasar sus hilos a GESTOR + WATT/impuestos y borrar la etiqueta solo con confirmacion individual de Cecil (regla 4). Pendiente de detalle y de decidir archivo/bandeja.
@@ -131,6 +131,7 @@ decisiones_lote5:  # Cecil 2026-11-12/13 (resto PENDIENTE de ejecutar: falta «a
   - Avisos puntuales con caducidad (c05): no siempre son suscripciones; hay que leer el detalle de cada uno antes de clasificar (lote 6).
   - Respuestas de Cecil 2026-11-13: avisos de seguridad de WordPress legitimos (se archivan); se aprueba por GRUPO (criterio + recuento + excepciones); gestoria: hasta 2026-10-31 archivar como leido, despues SOLO etiquetar, marcar NO LEIDO y mantener en bandeja; boletines desde 2026-11-10 se quedan en bandeja; GESTOR/Impuestos eliminada (49 hilos migrados a GESTOR + WATT/impuestos).
   - Supuesto a confirmar: la fecha de corte se aplica a la fecha del ultimo mensaje del hilo.
+  - Nota operativa: para dejar un hilo «no leido» se marca solo el mensaje recibido; marcar el hilo entero deja tambien sin leer los mensajes enviados por Cecil (corregido el 2026-11-13). Fecha de corte = ultimo mensaje del hilo.
 pendientes:
   - c25 Calendar: conector disponible (2026-11-12). Cecil acepta que Claude PROPONGA eventos con aviso 48 h antes; no se crean sin aprobacion de una lista concreta. Calendarios validos: cecil@the-storytellers.es y WATT PAGOS. La fecha de caducidad esta en el cuerpo (leer solo esos avisos).
   - c04 archiva avisos de notificacion con asunto IMPORTANT: revisar a los 30 dias que no se pierda ningun plazo (aprobado por Cecil).
