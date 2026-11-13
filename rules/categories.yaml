@@ -122,6 +122,13 @@ decisiones_lote4:  # Cecil 2026-11-12 («apruebo 1-32»)
   - BBVA promociones (bbva@comunica.bbva.com): ofertas-comerciales + archivar. FASE 4: darse de baja de la lista (confirmacion individual, regla 4; baja manual o por enlace de baja).
   - Boletines de Canva (start@engage.canva.com): FASE 4: darse de baja (confirmacion individual). Sin etiquetar todavia (esperan decision de grupo).
   - WATT/bancos y WATT/pagos-cobros: lo recibido HASTA el 2026-11-09 (incluido) se etiqueta y archiva; lo recibido DESDE el 2026-11-10 y a futuro se etiqueta pero SE MANTIENE EN BANDEJA. Sustituye a «etiquetar + archivar» de pagos-cobros en c06/c12/c13.
+decisiones_lote5:  # Cecil 2026-11-12/13 (PENDIENTE de ejecutar: falta listado por grupos y «apruebo»)
+  - Correos de sistema WordPress/Wordfence: etiquetar y archivar todo como leido, tambien lo futuro, salvo algo muy preocupante (alta de usuario, cambios de contrasena, fallos de actualizacion se avisan antes de archivar).
+  - AEAT (correo.aeat.es, label WATT/administracion-publica): hasta el 2026-09-30 inclusive etiquetar y archivar como leido; desde el 2026-10-01 y a futuro: etiquetar, marcar NO LEIDO y mantener en bandeja.
+  - Gestoria (cve-advocats.com): todos con la etiqueta GESTOR; los claramente de impuestos ademas WATT/impuestos. La etiqueta GESTOR/Impuestos se elimina para siempre (redundante): primero pasar sus hilos a GESTOR + WATT/impuestos y borrar la etiqueta solo con confirmacion individual de Cecil (regla 4). Pendiente de detalle y de decidir archivo/bandeja.
+  - Holded (send.holded.com): facturas existentes facturas-proveedores + Facturas + archivar leido; codigos de verificacion (2FA) existentes cuentas-usuario + archivar leido. Desde el 2026-11-13: los codigos de verificacion (de cualquier remitente) se etiquetan cuentas-usuario pero NO se archivan.
+  - Boletines de alta frecuencia (c19): hasta el 2026-11-09 inclusive WATT/newsletters + archivar leido; despues (supuesto, a confirmar): etiquetar y mantener en bandeja. Excluir de la regla por remitente los codigos de acceso, recibos y conversaciones.
+  - Avisos puntuales con caducidad (c05): no siempre son suscripciones; hay que leer el detalle de cada uno antes de clasificar (lote 6).
 pendientes:
   - c25 Calendar: conector disponible (2026-11-12). Cecil acepta que Claude PROPONGA eventos con aviso 48 h antes; no se crean sin aprobacion de una lista concreta. Calendarios validos: cecil@the-storytellers.es y WATT PAGOS. La fecha de caducidad esta en el cuerpo (leer solo esos avisos).
   - c04 archiva avisos de notificacion con asunto IMPORTANT: revisar a los 30 dias que no se pierda ningun plazo (aprobado por Cecil).
