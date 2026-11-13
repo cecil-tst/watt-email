@@ -37,6 +37,9 @@ Decisión de Cecil (2026-11-12): los de Dropbox y OpenAI SIN PDF adjunto, y todo
 | B2 | Canva (start@engage.canva.com) | boletín semanal; hilos 16a3471aa1bfcd2e 1691439b518ec749 (2019, etiquetados `WATT/newsletters` y archivados) | enlace de baja del correo (Cecil) |
 También pendientes de decisión de baja (regla c19): IA Hub, Atlassian marketing, WPVibe, SiteGround Web Hosting, Emexs, OpenAI Ads, Claude Team.
 
+## Añadido en fase 2 (2026-11-13)
+- Ivan Berbel, hilo 1a19da16ed9bdca2 (recibido 2026-11-02 > 2026-11-01, 5 PDF): reenviar a Holded; sigue en inbox con `WATT/facturas-proveedores`.
+
 ## Pendientes de ampliar la cola (se añadirán desde fase 2)
 - Recibos SaaS posteriores al 2026-07-01 de Anthropic/OpenAI/Google/Dropbox que no estaban en la primera página de la consulta (lote 4).
 - Facturas de proveedores recibidas después del 2026-11-01 (hasta hoy, ninguna: las de Holded/WELOFT son anteriores).
