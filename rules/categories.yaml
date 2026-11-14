@@ -52,7 +52,8 @@ reglas:
   - {caso: c04, match: "from:Consorci de Serveis Universitaris de Catalunya", categoria: info-servicio, fase2: "etiquetar + archivar", fase4: "-  # RIESGO: asuntos 'IMPORTANT: Avis de notificacio' pueden traer plazo; revisar tras 1 mes"}
   - {caso: c05, match: "avisos puntuales: Junta AFA, Mosyle, Sanity, Registradores", categoria: recordatorios-suscripcion, fase2: "etiquetar + pseudo-snooze hasta fecha de caducidad", fase4: "manual (Cecil)"}
   - {caso: c09, match: "from:Holded (equipo, marketing); soporte -> info-servicio", categoria: newsletters, fase2: "etiquetar + archivar", fase4: "-"}
-  - {caso: c11, match: "from:no-reply@the-storytellers.es subject:CONTACTO WEB", categoria: ofertas-comerciales, fase2: "etiquetar; mantener 1 mes en bandeja y revisar leads", fase4: "-"}
+  - {caso: c11, match: "from:no-reply@the-storytellers.es subject:CONTACTO WEB", categoria: ofertas-comerciales, fase2: "DECISION Cecil 2026-11-14: los existentes se archivan todos; a futuro, los que parezcan publi/spam: etiquetar + archivar como leido (aplicado por Claude en cada triaje, NO es un filtro de Gmail: crear filtros sigue prohibido); si parece un lead real, dejar en bandeja y avisar", fase4: "-"}
+  - {caso: c32, match: "from:cdmon.com (pedidos, facturas, renovaciones)", categoria: facturas-saas, fase2: "decision Cecil 2026-11-14: dominios cdmon al dia y WHOIS actualizado; avisos de renovacion -> recordatorios-suscripcion + archivar; codigos de inicio de sesion -> cuentas-usuario + archivar; pedidos/facturas -> facturas-saas + Facturas", fase4: "reenviar factura PDF a holded_inbox si recibida desde 2026-07-01 (servicio/suscripcion/compra = facturas-saas)"}
   - {caso: c13, match: "from:openarms.es + recibos PayPal", categoria: pagos-cobros, fase2: "recibos: etiquetar + archivar; boletin: newsletters", fase4: "recibo -> Drive/Donaciones"}
   - {caso: c14, match: "from:Justicia Alimentaria (via grupo)", categoria: newsletters, fase2: "etiquetar + archivar", fase4: "-"}
   - {caso: c16, match: "captacion en frio (remitentes sueltos, alias cecil.servan@)", categoria: ofertas-comerciales, fase2: "etiquetar + archivar", fase4: "-"}
@@ -138,3 +139,4 @@ pendientes:
   - c19 la baja de listas es siempre confirmacion individual (regla 4).
   - f04 (xdesign.barcelona): RESUELTO 2026-11-12, proveedor (regla f04).
   - Confirmado por Cecil 2026-11-12: facturas de proveedores anteriores al 2 nov 2026 no se reenvian, las posteriores si.
+  - Aclaracion Cecil 2026-11-14: la fecha del 2026-07-01 vale para facturas de servicios, suscripciones, compras, etc. (facturas-saas, incluye cdmon); la fecha posterior al 2026-11-01 es solo para proveedores (freelances/agencias: facturas-proveedores).

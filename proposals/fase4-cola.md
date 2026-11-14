@@ -42,6 +42,7 @@ También pendientes de decisión de baja (regla c19): IA Hub, Atlassian marketin
 - Anthropic, hilo 1a1c3c558c8a1aa4 (recibo 2026-11-10, posterior a 2026-07-01): reenviar a Holded; sigue en inbox con `WATT/facturas-saas`.
 - Anthropic 1a16d704c945d1f6, 1a1692cce603bf7d, 1a163afbfd58b5fc (recibos 22-24 oct) y 1a140f65b9e55e26 (Anthropic PBC, 15-oct): reenviar a Holded; en inbox con `WATT/facturas-saas`.
 - SiteGround 1a14906d3042b866 (recibo 17-oct): comprobar si trae PDF; en inbox con `WATT/facturas-saas`.
+- cdmon (servicio, desde 2026-07-01): 1a0e7b35fba37640 (pedido CMD12377501, 28-sep, PDF factura_cdmon_IN-CD-2026-177786) y 1a1d1233ecb3e3e6 (pedido CMD12476624, 12-nov, 29,52 EUR; comprobar PDF). Las copias via hola@ (1a0e7b36af2c3c06, 1a1d1234c419fbe8) NO se reenvian (duplicado). Etiquetados facturas-saas + Facturas.
 
 ## Nota de Cecil (2026-11-14): bajas en `WATT/ofertas-comerciales`
 - Valorar, para TODAS las ofertas comerciales, si el remitente ofrece opción de baja (enlace «unsubscribe» / cabecera List-Unsubscribe / «responda No»).
