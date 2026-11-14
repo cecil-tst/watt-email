@@ -43,10 +43,18 @@ También pendientes de decisión de baja (regla c19): IA Hub, Atlassian marketin
 - Anthropic 1a16d704c945d1f6, 1a1692cce603bf7d, 1a163afbfd58b5fc (recibos 22-24 oct) y 1a140f65b9e55e26 (Anthropic PBC, 15-oct): reenviar a Holded; en inbox con `WATT/facturas-saas`.
 - SiteGround 1a14906d3042b866 (recibo 17-oct): comprobar si trae PDF; en inbox con `WATT/facturas-saas`.
 - cdmon (servicio, desde 2026-07-01): 1a0e7b35fba37640 (pedido CMD12377501, 28-sep, PDF factura_cdmon_IN-CD-2026-177786) y 1a1d1233ecb3e3e6 (pedido CMD12476624, 12-nov, 29,52 EUR; comprobar PDF). Las copias via hola@ (1a0e7b36af2c3c06, 1a1d1234c419fbe8) NO se reenvian (duplicado). Etiquetados facturas-saas + Facturas.
+- cve-advocats (gestoria, proveedor, recibida 2026-11-13 > 2026-11-01): 1a1d5541ce91f7b6 «Factura octubre 2026» con PDF; sigue SIN LEER en bandeja con GESTOR + facturas-proveedores + Facturas. Aviso: la gestoria reclama ademas 349,05 EUR por IRPF pagado.
+- Facturas mensuales growth-lab/Rafa de octubre (1a18c1b0fa4a25e1, 1a18bcea145563b8, fecha 30-oct, ANTERIORES al 2026-11-01): Cecil pidio «cola de reenvios» pero la regla de proveedores las excluye; pendiente de que Cecil confirme excepcion.
 
 ## Nota de Cecil (2026-11-14): bajas en `WATT/ofertas-comerciales`
 - Valorar, para TODAS las ofertas comerciales, si el remitente ofrece opción de baja (enlace «unsubscribe» / cabecera List-Unsubscribe / «responda No»).
 - Pasada de solo lectura: abrir un hilo por remitente, anotar si hay baja y el método; añadir a la lista de bajas (confirmación individual, regla 4). Los formularios web de WordPress no tienen baja posible.
+
+## Lista de revision de BAJA (nota de Cecil 2026-11-14)
+Todo hilo etiquetado `newsletters`, `info-servicio` u `ofertas-comerciales` entra aqui: en fase 4 se comprueba por remitente si hay opcion de baja y se pide confirmacion individual (regla 4). Remitentes añadidos el 2026-11-14:
+- **newsletters**: SiteGround Web Hosting (via hola@); ai@the-storytellers.es; botiga@canal.es; hello@lifeandthyme.com; hello@news.wpml.org; hola@the-storytellers.es; info@e.atlassian.com; john@wpvibe.ai (John Turner/WPVibe); noreply@email.openai.com; ship@info.vercel.com
+- **info-servicio**: admin@thefoodtellers.com (DMARC); do-not-reply@trello.com; hello@business.mosyle.com; noreply@email.openai.com; notifications@sanity.io; wordpress@thefoodtellers.com
+- **ofertas-comerciales**: contacto@jaumaraw.com; d@tryember.site; hailey@bookedlab.org; kimberly@parceliv.co; l.gnanguenon@hypeauditorsapp.com; ma_alonso@geotvconectada.es; mia.taylor@nextgrowiq.com
 
 ## Pendientes de ampliar la cola (se añadirán desde fase 2)
 - Recibos SaaS posteriores al 2026-07-01 de Anthropic/OpenAI/Google/Dropbox que no estaban en la primera página de la consulta (lote 4).
